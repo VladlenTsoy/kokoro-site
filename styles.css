@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --background: #060608;
+    --color: #FAFAFA;
+}
+
+/* Подключение шрифтов */
+@font-face {
+    font-family: 'Halvar Breitschrift';
+    src: url('fonts/halvar_font/Halvar Breitschrift Black.ttf') format('truetype');
+    font-weight: 900; /* Жирный шрифт */
+}
+
+@font-face {
+    font-family: 'Halvar Breitschrift';
+    src: url('fonts/halvar_font/Halvar Breitschrift Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Halvar Breitschrift';
+    src: url('fonts/halvar_font/Halvar Breitschrift Medium.ttf') format('truetype');
+    font-weight: 500; /* Средний шрифт */
+}
+
+@font-face {
+    font-family: 'Halvar Breitschrift';
+    src: url('fonts/halvar_font/Halvar Breitschrift Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: 'Halvar Breitschrift', sans-serif; /* Если шрифт не загрузится, используется альтернативный шрифт из семейства sans-serif */
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--background);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Halvar Breitschrift', sans-serif;
+}
+
+.container img {
+    width: 500px;
+    margin: 1rem 0;
+}
+
+.container {
+    color: var(--color);
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.right {
+    text-align: right;
+    width: 100%;
+}
+
+.right a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color .2s ease-in-out;
+}
+
+.right a:hover {
+    color: #eb5328
+}
+
+.stack {
+    display: grid;
+    grid-template-columns: 1fr;
+}
