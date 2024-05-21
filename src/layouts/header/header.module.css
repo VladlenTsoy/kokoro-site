@@ -1,0 +1,62 @@
+.header {
+    display: grid;
+    grid-template-columns: 1fr 152px 1fr;
+    align-items: center;
+    padding: 0 60px;
+}
+
+.header .menu {
+    text-transform: uppercase;
+    padding: 24px 0;
+}
+
+.header .menu a:first-child {
+    padding-left: 0;
+}
+
+.header .menu a:last-child {
+    padding-right: 0;
+}
+
+.header .menu a {
+    display: inline-block;
+    padding: 12px 27px;
+    cursor: pointer;
+    transition: color .3s ease-in-out;
+}
+
+.header .menu a:hover {
+    color: var(--primary-color);
+}
+
+.header .sub_menu {
+    text-align: right;
+    padding: 25px 0;
+}
+
+.header .sub_menu .cart_icon_block {
+    display: inline-flex;
+    cursor: pointer;
+    height: 41px;
+    width: 41px;
+    align-items: center;
+    justify-content: center;
+}
+
+.header .sub_menu .cart_icon_block .cart_path_one {
+    fill: #090909;
+    transition: all .3s ease-in-out;
+}
+
+.header .sub_menu .cart_icon_block .cart_path_two {
+    stroke: #363A42;
+    transition: all .3s ease-in-out;
+}
+
+.header .sub_menu .cart_icon_block:hover .cart_path_one {
+    fill: var(--primary-color);
+}
+
+.header .sub_menu .cart_icon_block:hover .cart_path_two {
+    stroke: var(--primary-color);
+}

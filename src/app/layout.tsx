@@ -1,5 +1,6 @@
 import type {Metadata} from "next"
 import "./globals.css"
+import Header from "@/layouts/header/header"
 
 export const metadata: Metadata = {
     title: "Feel your KOKORO",
@@ -13,7 +14,10 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
         <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
         <link rel="manifest" href="/favicons/site.webmanifest" />
-        <body>{children}</body>
+        <body>
+        <Header />
+        {children}
+        </body>
         </html>
     )
 }
