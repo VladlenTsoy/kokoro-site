@@ -18,3 +18,14 @@
 .banner .banner_image img {
     width: 100%;
 }
+
+.banner .banner_image .banner_title {
+    position: absolute;
+    z-index: 20;
+    color: white;
+    top: 20px;
+    left: 20px;
+    font-size: 120px;
+    line-height: 100px;
+    text-align: left;
+}
