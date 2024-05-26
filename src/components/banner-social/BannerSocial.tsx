@@ -1,6 +1,5 @@
 import React from "react"
 import styles from "./BannerSocial.module.css"
-import Link from "next/link"
 
 interface BannerSocialProps {
     name: string
