@@ -1,0 +1,9 @@
+.social {
+    color: white;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: 1rem 20px;
+    cursor: pointer;
+}
