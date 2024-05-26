@@ -29,3 +29,11 @@
     line-height: 100px;
     text-align: left;
 }
+
+.banner .banner_image .banner_socials {
+    position: absolute;
+    left: 0;
+    bottom: 10px;
+    display: flex;
+    align-items: center;
+}
