@@ -13,7 +13,7 @@ const Header: React.FC = () => {
             </div>
             <div className={styles.logo}>
                 <Link href="/">
-                    <Image src="./images/logo_black.svg" alt="KOKORO logo black" width="120" height="24" priority />
+                    <Image src="./images/logo_black.svg" alt="KOKORO logo black" width="125" height="24" priority />
                 </Link>
             </div>
             <div className={styles.sub_menu}>
