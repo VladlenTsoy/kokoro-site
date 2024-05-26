@@ -2,39 +2,26 @@ import React from "react"
 import styles from "./header.module.css"
 import Image from "next/image"
 import Link from "next/link"
+import HeaderMenu from "@/layouts/header/header-menu"
+import HeaderSubMenu from "@/layouts/header/header-sub-menu"
 
 const Header: React.FC = () => {
     return (
         <div className={styles.header}>
-            <div className={styles.menu}>
-                <Link href="/">Главная</Link>
-                <Link href="/about-us">О Нас</Link>
-                <Link href="/#collection">Коллекция</Link>
-            </div>
-            <div className={styles.logo}>
+            <HeaderMenu />
+            <div className={styles.logo_block}>
                 <Link href="/">
-                    <Image src="./images/logo_black.svg" alt="KOKORO logo black" width="125" height="24" priority />
+                    <Image
+                        src="./images/logo_black.svg"
+                        className={styles.logo}
+                        alt="KOKORO logo black"
+                        width="125"
+                        height="24"
+                        priority
+                    />
                 </Link>
             </div>
-            <div className={styles.sub_menu}>
-                <div className={styles.cart_icon_block}>
-                    <svg width="20" height="20" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            className={styles.cart_path_one}
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M14.2971 6.45837H7.69709C4.58043 6.45837 4.26877 7.91587 4.0671 9.69421L3.24209 16.5692C2.96709 18.8242 3.66376 20.6667 6.88126 20.6667H15.1221C18.1933 20.6667 18.963 18.9783 18.79 16.856C18.7617 16.8592 18.733 16.8609 18.704 16.8609H7.32812C6.91391 16.8609 6.57812 16.5251 6.57812 16.1109C6.57812 15.6967 6.91391 15.3609 7.32812 15.3609H18.6163L17.9363 9.69421C17.7254 7.91587 17.4138 6.45837 14.2971 6.45837Z"
-                        />
-                        <path
-                            className={styles.cart_path_two}
-                            d="M7.32812 7.83337V4.62504C7.32812 3.25004 8.24479 2.33337 9.61979 2.33337H12.3698C13.7448 2.33337 14.6615 3.25004 14.6615 4.62504V7.83337"
-                            strokeOpacity="0.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
-                </div>
-            </div>
+            <HeaderSubMenu />
         </div>
     )
 }
