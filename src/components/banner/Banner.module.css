@@ -37,3 +37,38 @@
     display: flex;
     align-items: center;
 }
+
+@media (max-width: 992px) {
+    .banner {
+        padding: 0;
+    }
+
+    .banner .banner_image {
+        border-radius: 0;
+    }
+
+    .banner .banner_image {
+        height: calc(100vh - 68px);
+    }
+
+    .banner .banner_image::before {
+        padding-bottom: calc(100% - 68px);
+    }
+
+    .banner .banner_image .banner_title {
+        font-size: 44px;
+        line-height: 38px;
+        text-align: left;
+        top: 16px;
+        left: 16px;
+        right: 16px;
+    }
+
+    .banner .banner_image .banner_socials {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        display: flex;
+    }
+}
