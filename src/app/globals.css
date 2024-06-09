@@ -82,3 +82,16 @@ h2 {
     line-height: 95%;
     margin-bottom: 12px;
 }
+
+
+@media (max-width: 1200px) {
+    h2 {
+        font-size: 40px;
+    }
+}
+
+@media (max-width: 992px) {
+    h2 {
+        font-size: 30px;
+    }
+}

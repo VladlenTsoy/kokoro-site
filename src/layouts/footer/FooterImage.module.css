@@ -1,0 +1,11 @@
+.footer_image {
+    max-width: 85%;
+    margin-bottom: -5px;
+    transition: max-width .3s ease-in-out;
+}
+
+@media (max-width: 992px) {
+    .footer_image {
+        max-width: 100%;
+    }
+}

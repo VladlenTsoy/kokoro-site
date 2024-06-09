@@ -1,0 +1,36 @@
+.footer {
+    padding: 12px 12px;
+    transition: padding .3s ease-in-out;
+}
+
+.container {
+    border-radius: 15px;
+    background: var(--black-color);
+    transition: border-radius .3s ease-in-out;
+}
+
+.content {
+    padding: 34px 22px 80px;
+}
+
+.items {
+    list-style: none;
+}
+
+.items .item {
+    color: white;
+    font-weight: normal;
+    text-transform: uppercase;
+    padding: 12px 0;
+}
+
+@media (max-width: 992px) {
+    .footer {
+        padding: 0;
+    }
+
+    .container {
+        border-radius: 0;
+    }
+}
+

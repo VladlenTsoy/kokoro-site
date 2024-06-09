@@ -2,10 +2,14 @@ import React from "react"
 import ProductCard from "@/components/product-card/ProductCard"
 import styles from "./ProductList.module.css"
 
-const ProductList = () => {
+interface ProductListProps {
+    title: React.ReactNode
+}
+
+const ProductList: React.FC<ProductListProps> = ({title}) => {
     return (
         <div className={styles.product_list}>
-            <h2>Новая<br />коллекция</h2>
+            <h2 className={styles.title}>{title}</h2>
             <div className={styles.container}>
                 {[1,2,3,4,5].map((id) =>
                     <ProductCard
