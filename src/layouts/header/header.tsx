@@ -1,9 +1,9 @@
 import React from "react"
 import styles from "./header.module.css"
-import Image from "next/image"
 import Link from "next/link"
 import HeaderMenu from "@/layouts/header/header-menu"
 import HeaderSubMenu from "@/layouts/header/header-sub-menu"
+import Logo from "@/components/logo/Logo"
 
 const Header: React.FC = () => {
     return (
@@ -11,14 +11,7 @@ const Header: React.FC = () => {
             <HeaderMenu />
             <div className={styles.logo_block}>
                 <Link href="/">
-                    <Image
-                        src="./images/logo_black.svg"
-                        className={styles.logo}
-                        alt="KOKORO logo black"
-                        width="125"
-                        height="24"
-                        priority
-                    />
+                    <Logo height={24} width={125} />
                 </Link>
             </div>
             <HeaderSubMenu />

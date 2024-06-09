@@ -1,0 +1,11 @@
+.banner {
+    width: 100%;
+    background: #363A42;
+}
+
+.banner::before {
+    content: "";
+    display: block;
+    padding-bottom: calc(100% / 1.90);
+}
+

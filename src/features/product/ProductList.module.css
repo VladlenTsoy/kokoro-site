@@ -1,0 +1,8 @@
+.product_list {
+    padding: 3rem 2rem;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 3fr);
+}
