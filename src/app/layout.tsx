@@ -1,6 +1,8 @@
 import type {Metadata} from "next"
 import "./globals.css"
 import Header from "@/layouts/header/header"
+import Footer from "@/layouts/footer/Footer"
+import React from "react"
 
 export const metadata: Metadata = {
     title: "Feel your KOKORO",
@@ -17,6 +19,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
         <body>
         <Header />
         {children}
+        <Footer />
         </body>
         </html>
     )

@@ -11,7 +11,6 @@ export default function Home() {
             <ProductList title={<>Новая<br />коллекция</>} />
             <ProductBanner />
             <ProductList title={<>Вам может<br />понравится</>} />
-            <Footer />
         </main>
     )
 }
