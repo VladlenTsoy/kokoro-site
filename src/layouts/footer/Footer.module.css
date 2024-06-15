@@ -4,7 +4,7 @@
 }
 
 .container {
-    border-radius: 15px;
+    border-radius: var(--border-radius);
     background: var(--black-color);
     transition: border-radius .3s ease-in-out;
 }

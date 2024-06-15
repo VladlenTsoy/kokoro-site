@@ -4,7 +4,7 @@
 }
 
 .banner .banner_image {
-    border-radius: 15px;
+    border-radius: var(--border-radius);
     overflow: hidden;
     position: relative;
     width: 100%;
