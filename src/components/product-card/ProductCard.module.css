@@ -3,13 +3,20 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
+    /*padding: 1rem;*/
     cursor: pointer;
 }
 
-.image {
+.image_wrapper {
+    position: relative;
     margin-bottom: 1rem;
-    margin-top: 3rem;
+    height: 263px;
+    width: 351px;
+}
+
+.image {
+    /*margin-bottom: 1rem;*/
+    /*margin-top: 3rem;*/
 }
 
 .title {
@@ -20,5 +27,20 @@
 }
 
 .price {
-    color: #898989;
+    color: var(--secondary-color);
 }
+
+
+@media (max-width: 576px) {
+    .image_wrapper {
+        height: 236px;
+        width: 315px;
+    }
+}
+
+/*@media (min-width: 448px) {*/
+/*    .image_wrapper {*/
+/*        width: 245px;*/
+/*        height: 184px;*/
+/*    }*/
+/*}*/

@@ -16,7 +16,9 @@ const ProductCard: React.FC<ProductCardProps> = ({id, title, price, image, disco
     return (
         <Link href={`/product/${id}`} passHref>
             <div className={styles.product_card}>
-                <Image className={styles.image} src={image} alt={title} height="263" width="351" />
+                <div className={styles.image_wrapper}>
+                    <Image className={styles.image} src={image} alt={title} fill priority={false} objectFit="contain"/>
+                </div>
                 <div className={styles.title}>{title}</div>
                 <div className={styles.price}>{formatPrice(price)} сум</div>
             </div>

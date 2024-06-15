@@ -8,9 +8,9 @@ export default function Home() {
     return (
         <main>
             <Banner title={<>FEEL YOUR<br />KOKORO</>} />
-            <ProductList title={<>Новая<br />коллекция</>} />
+            <ProductList title={<h2>Новая<br />коллекция</h2>} />
             <ProductBanner />
-            <ProductList title={<>Вам может<br />понравится</>} />
+            <ProductList title={<h3>Вам может<br />понравится</h3>} />
         </main>
     )
 }

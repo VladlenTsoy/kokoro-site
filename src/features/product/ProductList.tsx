@@ -9,7 +9,7 @@ interface ProductListProps {
 const ProductList: React.FC<ProductListProps> = ({title}) => {
     return (
         <div className={styles.product_list}>
-            <h2 className={styles.title}>{title}</h2>
+            {title}
             <div className={styles.container}>
                 {[1,2,3,4,5].map((id) =>
                     <ProductCard

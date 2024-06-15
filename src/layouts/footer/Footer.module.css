@@ -50,9 +50,14 @@
     color: var(--primary-color);
 }
 
+.items .item.desc a {
+    padding: 0;
+}
+
 @media (max-width: 992px) {
     .footer {
         padding: 0;
+        overflow: hidden;
     }
 
     .container {

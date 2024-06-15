@@ -11,27 +11,7 @@ const Footer = () => {
                 <div className={styles.content}>
                     <ul className={styles.items}>
                         <li className={styles.title}>
-                            Навигация
-                        </li>
-                        <li className={styles.item}>
-                            <Link href="/" passHref>
-                                Главная
-                            </Link>
-                        </li>
-                        <li className={styles.item}>
-                            <Link href="/" passHref>
-                                О нас
-                            </Link>
-                        </li>
-                        <li className={styles.item}>
-                            <Link href="/" passHref>
-                                Коллекция
-                            </Link>
-                        </li>
-                    </ul>
-                    <ul className={styles.items}>
-                        <li className={styles.title}>
-                            Информация
+                            Для клиентов
                         </li>
                         <li className={styles.item}>
                             <Link href="/" passHref>
@@ -45,6 +25,16 @@ const Footer = () => {
                         </li>
                         <li className={styles.item}>
                             <Link href="/" passHref>
+                                Упаковка
+                            </Link>
+                        </li>
+                    </ul>
+                    <ul className={styles.items}>
+                        <li className={styles.title}>
+                            Информация
+                        </li>
+                        <li className={styles.item}>
+                            <Link href="/" passHref>
                                 Публичная оферта
                             </Link>
                         </li>
@@ -55,18 +45,20 @@ const Footer = () => {
                         </li>
                         <li className={styles.item}>
                             <Link href="/" passHref>
-                                Политика конфиденциальности персональных данных
+                                Политика конфиденциальности
                             </Link>
                         </li>
                     </ul>
-                    <ul className={styles.items}></ul>
+                    <ul className={styles.items}>
+
+                    </ul>
                     <ul className={styles.items}>
                         <li className={styles.title}>Контакты</li>
-                        <li className={cn(styles.item, styles.desc)}>Tel: +998-33-999-99-99</li>
-                        <li className={cn(styles.item, styles.desc)}>Email: info@kokoro.uz</li>
-                        <li className={cn(styles.item, styles.desc)}>Instagram</li>
-                        <li className={cn(styles.item, styles.desc)}>Telegram</li>
-                        <li className={cn(styles.item, styles.desc)}>Facebook</li>
+                        <li className={cn(styles.item, styles.desc)}>Tel: <a href="tel:+998338403006">+998-33-840-30-06</a></li>
+                        <li className={cn(styles.item, styles.desc)}>Email: <a href="mailto:info@kokoro.uz">info@kokoro.uz</a></li>
+                        <li className={cn(styles.item, styles.desc)}><a href="https://www.instagram.com/kokoro.mode/" target="_blank">Instagram</a></li>
+                        <li className={cn(styles.item, styles.desc)}><a href="https://t.me/kokoro_wear" target="_blank">Telegram</a></li>
+                        <li className={cn(styles.item, styles.desc)}><a href="https://www.facebook.com/people/Kokoro/61557878135619/">Facebook</a></li>
                     </ul>
                 </div>
                 <FooterImage />
