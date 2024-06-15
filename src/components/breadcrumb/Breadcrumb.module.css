@@ -1,0 +1,35 @@
+.breadcrumb {
+    padding: 24px 94px;
+    text-transform: uppercase;
+    display: flex;
+    gap: 8px;
+}
+
+.splash {
+    color: #4E4E4E;
+}
+
+.item {
+    color: #898989;
+    transition: all .3s ease-in-out;
+}
+
+.item a {
+    color: #898989;
+    transition: all .3s ease-in-out;
+}
+
+.item a:hover {
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.item.current {
+    color: var(--black-color);
+}
+
+@media (max-width: 768px) {
+    .breadcrumb {
+        display: none;
+    }
+}

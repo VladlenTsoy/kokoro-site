@@ -1,12 +1,11 @@
 import React from "react"
 import styles from "./page.module.css"
+import Breadcrumb from "@/components/breadcrumb/Breadcrumb"
 
 const Page = () => {
     return (
-        <div className={styles.banner}>
-            <div className={styles.banner_image}>
-
-            </div>
+        <div>
+            <Breadcrumb />
         </div>
     )
 }

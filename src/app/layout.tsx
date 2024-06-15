@@ -3,6 +3,7 @@ import "./globals.css"
 import Header from "@/layouts/header/header"
 import Footer from "@/layouts/footer/Footer"
 import React from "react"
+import CookieModal from "@/features/cookie-modal/CookieModal"
 
 export const metadata: Metadata = {
     title: "Feel your KOKORO",
@@ -20,6 +21,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
         <Header />
         {children}
         <Footer />
+        <CookieModal />
         </body>
         </html>
     )

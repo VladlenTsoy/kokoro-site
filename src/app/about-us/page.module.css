@@ -1,0 +1,23 @@
+.banner {
+    padding: 0 12px;
+    transition: padding .3s ease-in-out;
+}
+
+.banner .banner_image {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    transition: border-radius .3s ease-in-out;
+    background: black;
+}
+
+.banner .banner_image::before {
+    content: "";
+    display: block;
+    padding-bottom: calc(100% / 1.94);
+}
+
+.banner .banner_image img {
+    width: 100%;
+}
