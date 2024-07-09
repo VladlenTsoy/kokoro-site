@@ -1,0 +1,19 @@
+.container {
+
+}
+
+.image {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.image::before {
+    content: '';
+    display: block;
+    padding-bottom: 74.96%;
+}
+
+.image img {
+    object-fit: contain;
+}
