@@ -1,0 +1,30 @@
+.header {
+    display: grid;
+    grid-template-columns: 1fr 125px 1fr;
+    align-items: center;
+    padding: 22px 12px;
+}
+
+@media (max-width: 992px) {
+    .header {
+        grid-template-columns: 1fr 116px 1fr;
+        padding: 16px 24px 8px;
+    }
+}
+
+.logo_block a {
+    display: inline-block;
+}
+
+.logo_block .logo {
+    width: 125px;
+    height: 24px;
+    transition: width 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .logo_block .logo {
+        width: 116px;
+        height: 27px;
+    }
+}

@@ -1,0 +1,10 @@
+.logo path {
+    fill: black;
+    transition: fill .3s ease-in-out;
+}
+
+@media (prefers-color-scheme: dark) {
+    .logo path {
+        /*fill: white;*/
+    }
+}
