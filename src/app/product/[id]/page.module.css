@@ -1,0 +1,60 @@
+.container {
+    padding: 24px 94px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2rem;
+}
+
+.details {
+    position: relative;
+}
+
+.sticky {
+    position: sticky;
+    top: 25px;
+}
+
+.product_header {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.product_header .title {
+    text-transform: uppercase;
+    line-height: .85;
+    font-size: 30px;
+}
+
+.product_header .prices {
+    text-align: right;
+}
+
+.product_header .prices .discount {
+    color: var(--secondary-color);
+    position: relative;
+}
+
+.product_header .prices .discount svg {
+    position: absolute;
+}
+
+.product_header .prices .price {
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.description {
+    color: var(--secondary-color);
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+    line-height: 18px;
+}
+
+.options {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
