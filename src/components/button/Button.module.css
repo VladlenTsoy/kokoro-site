@@ -3,3 +3,7 @@
     background: var(--black-color);
     color: white;
 }
+
+.block {
+    width: 100%;
+}
