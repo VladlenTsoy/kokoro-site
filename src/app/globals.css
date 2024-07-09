@@ -57,7 +57,6 @@
 
 html,
 body {
-    overflow-x: hidden;
     color: var(--black-color);
     font-size: var(--font-size);
     letter-spacing: normal;
