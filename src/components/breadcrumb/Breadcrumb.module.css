@@ -28,7 +28,7 @@
     color: var(--black-color);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .breadcrumb {
         display: none;
     }
