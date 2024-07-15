@@ -1,0 +1,56 @@
+.page {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.container img {
+    width: 500px;
+    margin: 1rem 0;
+}
+
+.container {
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.right {
+    text-align: right;
+    width: 100%;
+}
+
+.right a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color .2s ease-in-out;
+}
+
+.right a:not(:last-child) {
+    margin-right: 1rem;
+}
+
+.right a:hover {
+    color: #eb5328
+}
+
+.stack {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+
+@media (max-width: 768px) {
+    .container img {
+        width: 200px;
+    }
+}

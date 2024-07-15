@@ -2,8 +2,11 @@ import React from "react"
 import Banner from "@/components/banner/Banner"
 import ProductList from "@/features/product/ProductList"
 import ProductBanner from "@/features/product-banner/ProductBanner"
+import {redirect} from "next/navigation"
 
 export default function Home() {
+    redirect('/coming-soon')
+
     return (
         <main>
             <Banner title={<>FEEL YOUR<br />KOKORO</>} />
@@ -13,3 +16,5 @@ export default function Home() {
         </main>
     )
 }
+
+
