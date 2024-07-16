@@ -3,8 +3,8 @@
 import {useEffect, useState} from "react"
 
 export const useScreenSize = () => {
-    const [width, setWidth] = useState(window.innerWidth)
-    const [md, setMd] = useState(window.innerWidth < 1200)
+    const [width, setWidth] = useState(0)
+    const [md, setMd] = useState(false)
 
     const resizeHandler = (e: any) => {
         setWidth(e.currentTarget.innerWidth)
@@ -12,10 +12,12 @@ export const useScreenSize = () => {
     }
 
     useEffect(() => {
-        window.addEventListener("resize", resizeHandler)
+        if (typeof window !== "undefined") {
+            window.addEventListener("resize", resizeHandler)
 
-        return () => {
-            window.removeEventListener("resize", resizeHandler)
+            return () => {
+                window.removeEventListener("resize", resizeHandler)
+            }
         }
     }, [])
 
