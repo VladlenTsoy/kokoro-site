@@ -60,9 +60,9 @@ const Select: React.FC<SelectProps> = ({options}) => {
                     <motion.div
                         ref={dropdownRef}
                         className={styles.dropdown}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
+                        initial={{opacity: 0, y: -10}}
+                        animate={{opacity: 1, y: 0}}
+                        exit={{opacity: 0, y: -10}}
                         transition={{duration: 0.1}}
                     >
                         {options.map((option, key) =>

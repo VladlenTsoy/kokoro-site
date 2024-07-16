@@ -39,17 +39,31 @@ const tabs = [
     {label: "Состав и уход", content: "Content of Tab 2"},
 ]
 
+const images = [
+    {
+        id: 1,
+        url: "/images/t-shirt.png"
+    },
+    {
+        id: 2,
+        url: "/images/t-shirt.png"
+    },
+    {
+        id: 3,
+        url: "/images/t-shirt.png"
+    }
+]
+
 const Page = () => {
     return (
         <>
             <Breadcrumb />
             <div className={styles.container}>
-                <ImageGallery
-                    images={["/images/t-shirt.png", "/images/t-shirt.png", "/images/t-shirt.png", "/images/t-shirt.png", "/images/t-shirt.png"]} />
+                <ImageGallery images={images} />
                 <div className={styles.details}>
                     <div className={styles.sticky}>
                         <div className={styles.product_header}>
-                            <h1 className={styles.title}>Tanjiro Demon Slayer</h1>
+                            <h1 className={styles.title}>ФУТБОЛКА TANJIRO DEMON SLAYER</h1>
                             <div className={styles.prices}>
                                 <div className={styles.discount}>
                                     <svg width="104" height="18" viewBox="0 0 104 18" fill="none"
@@ -57,9 +71,9 @@ const Page = () => {
                                         <path d="M1 17C19.1615 11.1536 64.9876 -0.210397 103 1.10505" stroke="#F04438"
                                               strokeWidth="2" strokeLinecap="round" />
                                     </svg>
-                                    1.500.000сум
+                                    500.000сум
                                 </div>
-                                <div className={styles.price}>1.350.000сум</div>
+                                <div className={styles.price}>350.000сум</div>
                             </div>
                         </div>
                         <div className={styles.description}>
@@ -71,8 +85,10 @@ const Page = () => {
                             <Select options={options} />
                             <Select options={sizeOptions} />
                         </div>
-                        <div>
+                        <div className={styles.tabs}>
                             <Tabs tabs={tabs} />
+                        </div>
+                        <div className={styles.actions}>
                             <Button block>Добавить в корзину</Button>
                         </div>
                     </div>

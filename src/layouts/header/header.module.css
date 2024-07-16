@@ -15,16 +15,3 @@
 .logo_block a {
     display: inline-block;
 }
-
-.logo_block .logo {
-    width: 125px;
-    height: 24px;
-    transition: width 0.3s ease-in-out;
-}
-
-@media (max-width: 768px) {
-    .logo_block .logo {
-        width: 116px;
-        height: 27px;
-    }
-}

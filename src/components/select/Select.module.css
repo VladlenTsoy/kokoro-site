@@ -50,6 +50,7 @@
     overflow: hidden;
     width: 100%;
     gap: .5rem;
+    background: white;
 }
 
 .dropdown .option:hover {

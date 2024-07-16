@@ -34,7 +34,7 @@ const CookieModal = () => {
                     вы
                     соглашаетесь с нашей политикой использования cookie.
                 </div>
-                <Button onClick={handleAccept}>Продолжить</Button>
+                <Button block onClick={handleAccept}>Продолжить</Button>
             </div>
         </div>
     )
