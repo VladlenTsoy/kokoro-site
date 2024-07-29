@@ -18,10 +18,10 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
         <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
         <link rel="manifest" href="/favicons/site.webmanifest" />
         <body>
-        {/*<Header />*/}
+        <Header />
         {children}
-        {/*<Footer />*/}
-        {/*<CookieModal />*/}
+        <Footer />
+        <CookieModal />
         </body>
         </html>
     )
