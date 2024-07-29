@@ -7,13 +7,16 @@ export const useScreenSize = () => {
     const [md, setMd] = useState(false)
 
     const resizeHandler = (e: any) => {
-        setWidth(e.currentTarget.innerWidth)
-        setMd(e.currentTarget.innerWidth < 1200)
+        const newWidth = e ? e.currentTarget.innerWidth : window.innerWidth
+        setWidth(newWidth)
+        setMd(newWidth < 1200)
     }
 
     useEffect(() => {
         if (typeof window !== "undefined") {
             window.addEventListener("resize", resizeHandler)
+            // Устанавливаем начальное значение ширины
+            resizeHandler(null)
 
             return () => {
                 window.removeEventListener("resize", resizeHandler)
