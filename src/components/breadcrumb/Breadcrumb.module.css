@@ -1,5 +1,5 @@
 .breadcrumb {
-    padding: 24px 94px;
+    padding: 24px 62px;
     text-transform: uppercase;
     display: flex;
     gap: 8px;
@@ -26,6 +26,12 @@
 
 .item.current {
     color: var(--black-color);
+}
+
+@media (max-width: 1400px) {
+    .breadcrumb {
+        padding: 24px 42px;
+    }
 }
 
 @media (max-width: 992px) {

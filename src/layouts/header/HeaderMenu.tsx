@@ -1,5 +1,5 @@
 import React from "react"
-import styles from "./header-menu.module.css"
+import styles from "./HeaderMenu.module.css"
 import Link from "next/link"
 
 const HeaderMenu = () => {

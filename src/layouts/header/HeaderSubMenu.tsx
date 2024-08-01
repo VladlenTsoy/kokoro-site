@@ -1,5 +1,5 @@
 import React from "react"
-import styles from "./header-sub-menu.module.css"
+import styles from "./HeaderSubMenu.module.css"
 
 const HeaderSubMenu = () => {
     return (

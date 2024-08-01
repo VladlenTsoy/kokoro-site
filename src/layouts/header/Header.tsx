@@ -1,8 +1,8 @@
 import React from "react"
-import styles from "./header.module.css"
+import styles from "./Header.module.css"
 import Link from "next/link"
-import HeaderMenu from "@/layouts/header/header-menu"
-import HeaderSubMenu from "@/layouts/header/header-sub-menu"
+import HeaderMenu from "@/layouts/header/HeaderMenu"
+import HeaderSubMenu from "@/layouts/header/HeaderSubMenu"
 import Logo from "@/components/logo/Logo"
 
 const Header: React.FC = () => {

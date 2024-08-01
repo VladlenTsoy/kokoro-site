@@ -5,6 +5,8 @@ import ImageGallery from "@/components/image-gallery/ImageGallery"
 import Select from "@/components/select/Select"
 import Tabs from "@/components/tabs/Tabs"
 import Button from "@/components/button/Button"
+import Container from "@/layouts/container/Container"
+import ProductPrice from "@/components/product-price/ProductPrice"
 
 const options = [
     {
@@ -35,51 +37,52 @@ const sizeOptions = [
 ]
 
 const tabs = [
-    {label: "Параметры", content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, culpa debitis deserunt ducimus excepturi fuga, impedit labore maiores minima obcaecati pariatur quasi quo sit. Asperiores ea esse hic itaque labore?"},
-    {label: "Состав и уход", content: "Content of Tab 2"},
+    {
+        label: "Параметры",
+        content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, culpa debitis deserunt ducimus excepturi fuga, impedit labore maiores minima obcaecati pariatur quasi quo sit. Asperiores ea esse hic itaque labore?"
+    },
+    {label: "Состав и уход", content: "Content of Tab 2"}
 ]
 
 const images = [
     {
         id: 1,
-        url: "/images/t-shirt.png"
+        url: "/images/1.jpg"
     },
     {
         id: 2,
-        url: "/images/t-shirt.png"
+        url: "/images/2.jpg"
     },
     {
         id: 3,
-        url: "/images/t-shirt.png"
+        url: "/images/3.jpg"
     }
 ]
 
-const Page = () => {
+const Page = ({params}: {params: {id: string}}) => {
+    console.log(params)
+    const {title, description, price, discount} = {
+        title: "ФУТБОЛКА TANJIRO",
+        description: "Добро пожаловать в мир Demon Slayer с нашей новой футболкой \"Tanjiro\" от KOKORO! Откройте\n" +
+            "для себя мощь и решимость этого замечательного персонажа, который вдохновляет на настоящие\n" +
+            "подвиги.",
+        price: 350000,
+        discount: 50
+    }
+
     return (
-        <>
+        <Container>
             <Breadcrumb />
             <div className={styles.container}>
                 <ImageGallery images={images} />
                 <div className={styles.details}>
                     <div className={styles.sticky}>
                         <div className={styles.product_header}>
-                            <h1 className={styles.title}>ФУТБОЛКА TANJIRO DEMON SLAYER</h1>
-                            <div className={styles.prices}>
-                                <div className={styles.discount}>
-                                    <svg width="104" height="18" viewBox="0 0 104 18" fill="none"
-                                         xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M1 17C19.1615 11.1536 64.9876 -0.210397 103 1.10505" stroke="#F04438"
-                                              strokeWidth="2" strokeLinecap="round" />
-                                    </svg>
-                                    500.000сум
-                                </div>
-                                <div className={styles.price}>350.000сум</div>
-                            </div>
+                            <h1 className={styles.title}>{title}</h1>
+                            <ProductPrice price={price} discount={discount} />
                         </div>
                         <div className={styles.description}>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam blanditiis cumque est
-                            facere officia ullam unde! Commodi corporis, dolore, enim eos est, fuga hic illo incidunt
-                            provident quasi vero!
+                            {description}
                         </div>
                         <div className={styles.options}>
                             <Select options={options} />
@@ -94,8 +97,12 @@ const Page = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </Container>
     )
 }
 
 export default Page
+
+export const config = {
+    revalidate: 10
+}

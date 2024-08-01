@@ -1,6 +1,6 @@
 import type {Metadata} from "next"
 import "./globals.css"
-import Header from "@/layouts/header/header"
+import Header from "@/layouts/header/Header"
 import Footer from "@/layouts/footer/Footer"
 import React from "react"
 import CookieModal from "@/features/cookie-modal/CookieModal"
