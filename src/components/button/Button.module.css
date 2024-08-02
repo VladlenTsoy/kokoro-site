@@ -2,6 +2,11 @@
     padding: 18px 60px 18px 60px;
     background: var(--black-color);
     color: white;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
 }
 
 .block {
