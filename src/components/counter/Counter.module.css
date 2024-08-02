@@ -1,0 +1,21 @@
+.counter {
+    display: flex;
+    align-items: center;
+}
+
+.btn {
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #EDEDED;
+    background: white;
+}
+
+.value {
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
