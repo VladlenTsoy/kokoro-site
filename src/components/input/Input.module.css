@@ -1,0 +1,49 @@
+.container {
+    position: relative;
+    width: 100%;
+}
+
+.label {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    transition: all 0.2s ease;
+    color: #C4C4C4;
+    pointer-events: none;
+}
+
+.input {
+    padding: 18px 12px;
+    width: 100%;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid #C4C4C4;
+    outline: none;
+    font-family: var(--font-text)
+}
+
+.input:focus {
+}
+
+.label_focused {
+    top: 14px;
+    left: 12px;
+    transform: translate(0, -16px);
+    font-size: 12px;
+}
+
+.input::placeholder {
+    font-family: var(--font-text);
+    color: var(--secondary-color);
+}
+
+.input::-webkit-input-placeholder {
+    font-family: var(--font-text);
+    color: var(--secondary-color);
+}
+
+.input:-moz-placeholder {
+    font-family: var(--font-text);
+    color: var(--secondary-color);
+}
