@@ -1,5 +1,5 @@
 .container {
-    padding: 24px 62px;
+    padding-top: 24px;
     display: grid;
     grid-template-columns: 1fr 550px;
     gap: 3rem;
@@ -68,7 +68,6 @@
 @media (max-width: 1400px) {
     .container {
         grid-template-columns: 1fr 500px;
-        padding: 24px 42px;
     }
 
     .product_header .title {
@@ -105,12 +104,11 @@
 
 @media (max-width: 992px) {
     .container {
+        padding: 0;
         display: block;
-        padding: 0 0 24px 0;
-        /*padding: 24px 0;*/
     }
 
     .details {
-        padding: 0 1rem;
+        padding: 0 22px;
     }
 }

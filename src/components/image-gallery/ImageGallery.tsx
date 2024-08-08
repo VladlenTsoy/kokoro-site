@@ -1,11 +1,11 @@
 "use client"
 
-import React, {Suspense, lazy} from "react"
+import React, {lazy, Suspense} from "react"
 import styles from "./ImageGallery.module.css"
 import Image from "next/image"
 import cn from "classnames"
-import {useScreenSize} from "@/hooks/useScreenSize"
 import LoadingBlock from "@/components/loading-block/LoadingBlock"
+import {useMediaQuery} from "react-responsive"
 
 const CarouselImages = lazy(() => import("@/components/carousel-images/CarouselImages"))
 
@@ -18,13 +18,13 @@ interface ImageGalleryProps {
 }
 
 const ImageGallery: React.FC<ImageGalleryProps> = ({images}) => {
-    const {width} = useScreenSize()
+    const isMobile = useMediaQuery({query: "(max-width: 992px)"})
 
     return (
         <>
             <Suspense fallback={<LoadingBlock />}>
                 {
-                    width <= 992 ?
+                    isMobile ?
                         <CarouselImages images={images} /> :
                         <div className={styles.container}>
                             {images.map((image, key) =>

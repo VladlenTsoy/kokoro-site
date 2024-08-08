@@ -60,7 +60,6 @@ const images = [
 ]
 
 const Page = ({params}: {params: {id: string}}) => {
-    console.log(params)
     const {title, description, price, discount} = {
         title: "ФУТБОЛКА TANJIRO",
         description: "Добро пожаловать в мир Demon Slayer с нашей новой футболкой \"Tanjiro\" от KOKORO! Откройте\n" +
@@ -103,6 +102,4 @@ const Page = ({params}: {params: {id: string}}) => {
 
 export default Page
 
-export const config = {
-    revalidate: 10
-}
+export const revalidate = 10
