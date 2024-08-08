@@ -12,7 +12,13 @@ const Breadcrumb = () => {
                 </Link>
             </div>
             <div className={styles.spash}>/</div>
-            <div className={cn(styles.item, styles.current)}>Футболка Tanjiro Demon Slayer</div>
+            <div className={styles.item}>
+                <Link href="/cart">
+                    Корзина
+                </Link>
+            </div>
+            <div className={styles.spash}>/</div>
+            <div className={cn(styles.item, styles.current)}>Оформление заказа</div>
         </div>
     )
 }
