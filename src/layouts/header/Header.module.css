@@ -3,6 +3,8 @@
     grid-template-columns: 1fr 125px 1fr;
     align-items: center;
     padding: 22px 12px;
+    position: relative;
+    z-index: 100
 }
 
 @media (max-width: 992px) {
