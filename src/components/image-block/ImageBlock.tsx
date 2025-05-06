@@ -8,9 +8,9 @@ interface ImageBlockProps {
     src: string
     alt: string
     priority?: boolean
+    fill?: boolean
     width?: number
     height?: number
-    layout?: "fill" | "fixed" | "intrinsic" | "responsive"
     quality?: number
 }
 
@@ -21,7 +21,7 @@ const ImageBlock: React.FC<ImageBlockProps> = (
         priority,
         width,
         height,
-        layout = "fill",
+        fill = false,
         quality = 100
     }
 ) => {
@@ -64,11 +64,12 @@ const ImageBlock: React.FC<ImageBlockProps> = (
                         <NextImage
                             src={src}
                             alt={alt}
-                            layout={layout}
                             priority={priority}
                             width={width}
                             height={height}
+                            fill={fill}
                             objectFit="cover"
+                            sizes="(max-width: 768px) 100%"
                             quality={quality}
                         />
                     </div>

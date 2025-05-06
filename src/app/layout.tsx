@@ -1,6 +1,6 @@
 import type {Metadata} from "next"
 import "./globals.css"
-import Header from "@/layouts/header/header"
+import Header from "@/layouts/header/Header"
 import Footer from "@/layouts/footer/Footer"
 import React from "react"
 import CookieModal from "@/features/cookie-modal/CookieModal"
@@ -18,10 +18,10 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
         <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
         <link rel="manifest" href="/favicons/site.webmanifest" />
         <body>
-        {/*<Header />*/}
+        <Header />
         {children}
-        {/*<Footer />*/}
-        {/*<CookieModal />*/}
+        <Footer />
+        <CookieModal />
         </body>
         </html>
     )

@@ -3,11 +3,11 @@
 import React from "react"
 import styles from "./page.module.css"
 import Image from "next/image"
-import {CarouselProvider, Slider, Slide, Dot} from "pure-react-carousel"
-import {useScreenSize} from "@/hooks/useScreenSize"
+import {CarouselProvider, Dot, Slide, Slider} from "pure-react-carousel"
+import {useMediaQuery} from "react-responsive"
 
 const Page = () => {
-    const {width} = useScreenSize()
+    const isMobile = useMediaQuery({query: "(max-width: 768px)"})
     return (
         <div className={styles.page}>
             <div className={styles.header}>
@@ -50,7 +50,7 @@ const Page = () => {
                     naturalSlideHeight={463}
                     naturalSlideWidth={326}
                     totalSlides={7}
-                    visibleSlides={width > 768 ? 3 : 1}
+                    visibleSlides={isMobile ? 1 : 3}
                     step={1}
                     dragStep={1}
                     infinite

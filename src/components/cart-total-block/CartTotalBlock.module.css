@@ -1,0 +1,50 @@
+.container {
+    padding: 18px;
+    background: #F9F9F9;
+}
+
+.title {
+    font-size: 20px;
+    text-align: left;
+    margin-bottom: 12px;
+}
+
+.product_list {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.product_list .product_item {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.product_list .product_item .label {
+    color: var(--secondary-color)
+}
+
+.product_list .product_item .price {
+    display: flex;
+    gap: .5rem;
+}
+
+.promo_code {
+    margin-bottom: 24px;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}
+
+.total .label {
+    font-size: 20px;
+}
+
+.total .value {
+    font-size: 20px;
+    font-weight: 700;
+}

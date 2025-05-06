@@ -1,9 +1,10 @@
 .breadcrumb {
-    padding: 24px 94px;
+    margin-bottom: 24px;
     text-transform: uppercase;
     display: flex;
     gap: 8px;
 }
+
 
 .splash {
     color: #4E4E4E;

@@ -1,0 +1,18 @@
+.tag {
+    height: 37px;
+    padding: 6px 12px 6px 12px;
+    background: #F9F9F9;
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+@media (max-width: 1400px) {
+    .tag {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}

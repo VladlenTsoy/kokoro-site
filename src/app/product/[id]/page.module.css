@@ -1,11 +1,9 @@
 .container {
-    padding: 24px 36px;
+    padding-top: 24px;
     display: grid;
     grid-template-columns: 1fr 550px;
-    gap: 2rem;
-    max-width: 1600px;
+    gap: 3rem;
     margin: 0 auto;
-    overflow: hidden;
 }
 
 .details {
@@ -46,7 +44,7 @@
 }
 
 .product_header .prices .price {
-    font-size: 22px;
+    font-size: 25px;
     font-weight: bolder;
 }
 
@@ -106,12 +104,11 @@
 
 @media (max-width: 992px) {
     .container {
+        padding: 0;
         display: block;
-        padding: 0 0 24px 0;
-        /*padding: 24px 0;*/
     }
 
     .details {
-        padding: 0 1rem;
+        padding: 0 22px;
     }
 }

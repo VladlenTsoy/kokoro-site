@@ -1,0 +1,46 @@
+.prices {
+    text-align: right;
+}
+
+.prices .discount {
+    color: var(--secondary-color);
+    position: relative;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.prices .discount svg {
+    position: absolute;
+    top: -3px;
+}
+
+.prices .price {
+    font-size: 25px;
+    font-weight: bolder;
+    white-space: nowrap;
+}
+
+@media (max-width: 1400px) {
+    .prices .discount {
+        font-size: var(--font-size);
+    }
+
+    .prices .price {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .prices .discount {
+        font-size: var(--font-size);
+    }
+
+    .prices .price {
+        font-size: 18px;
+    }
+
+    .prices .discount svg {
+        width: 90px;
+        top: -3px;
+    }
+}

@@ -1,13 +1,17 @@
+.image:not(:last-child) {
+    margin-bottom: 2rem;
+}
+
 .image {
     position: relative;
     width: 100%;
-    margin-bottom: 1rem;
 }
 
 .image::before {
     content: '';
     display: block;
-    padding-bottom: 74.96%;
+    padding-bottom: 133.33%;
+    /*padding-bottom: 74.96%;*/
 }
 
 .image img {

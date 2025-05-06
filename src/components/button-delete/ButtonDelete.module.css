@@ -1,0 +1,13 @@
+.btn_delete {
+    background: none;
+    border: 0;
+}
+
+.btn_delete path {
+    transition: stroke 0.3s ease-in-out;
+    stroke: #A6A6A6;
+}
+
+.btn_delete:hover path {
+    stroke: #303030
+}

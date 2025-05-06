@@ -1,0 +1,143 @@
+.product_item {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 0;
+}
+
+.product_item .product_info {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.product_item .image {
+    position: relative;
+    width: 110px;
+    height: 140px;
+    background: gray;
+}
+
+.product_item .image img {
+    object-fit: cover;
+    object-position: center;
+}
+
+.product_item .title {
+    font-family: var(--font-header);
+    font-size: 22px;
+    font-weight: 700;
+    text-align: left;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+.product_item .tags {
+    display: flex;
+    gap: 1rem;
+}
+
+.product_item .price_block {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.product_item .price_block .discount {
+    font-weight: 400;
+    text-align: left;
+    position: relative;
+    color: var(--secondary-color);
+}
+
+.product_item .price_block .discount svg {
+    position: absolute;
+    top: -3px;
+}
+
+.product_item .price_block .price {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 27px;
+    text-align: left;
+}
+
+@media (max-width: 1400px) {
+    .product_item .title {
+        font-size: 18px;
+    }
+
+    .product_item .image {
+        width: 90px;
+        height: 110px;
+    }
+
+    .product_item .price_block .price {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .product_item .title {
+        font-size: 16px
+    }
+
+    .product_item .image {
+        width: 90px;
+        height: 110px;
+    }
+
+    .product_item .price_block .price {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .product_item {
+        position: relative;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .product_item:not(:last-child) {
+        border-bottom: 1px solid #E7E7E7;
+    }
+
+    .product_item .product_info {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .product_item .image {
+        width: 120px;
+        height: 160px;
+    }
+
+    .product_item .title {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .product_item .tags {
+        justify-content: center;
+    }
+
+    .button_delete {
+        position: absolute;
+        top: 36px;
+        right: 24px;
+    }
+
+    .product_item .price_block {
+        text-align: center;
+    }
+
+    .product_item .price_block .discount {
+        text-align: center;
+    }
+
+    .product_item .price_block .price {
+        font-size: 20px;
+    }
+}
