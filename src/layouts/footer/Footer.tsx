@@ -58,7 +58,7 @@ const Footer = () => {
                         <li className={cn(styles.item, styles.desc)}>Email: <a href="mailto:info@kokoro.uz">info@kokoro.uz</a></li>
                         <li className={cn(styles.item, styles.desc)}><a href="https://www.instagram.com/kokoro.mode/" target="_blank">Instagram</a></li>
                         <li className={cn(styles.item, styles.desc)}><a href="https://t.me/kokoro_wear" target="_blank">Telegram</a></li>
-                        <li className={cn(styles.item, styles.desc)}><a href="https://www.facebook.com/people/Kokoro/61557878135619/">Facebook</a></li>
+                        <li className={cn(styles.item, styles.desc)}><a href="https://www.facebook.com/people/Kokoro/61557878135619/" target="_blank">Facebook</a></li>
                     </ul>
                 </div>
                 <FooterImage />
