@@ -9,16 +9,32 @@ import {usePathname} from "next/navigation"
 
 const HeaderMenu = () => {
     const pathname = usePathname()
+
     const [isOpen, setIsOpen] = useState(false)
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     const onClickHandler = () => {
-        setIsOpen(prevState => !prevState)
+        setIsOpen(prev => !prev)
     }
 
     const menuVariants = {
         hidden: {opacity: 0},
-        visible: {opacity: 1, transition: {duration: 0.2, staggerChildren: 0.1}},
-        exit: {opacity: 0, transition: {duration: 0.2, staggerChildren: 0.1, staggerDirection: -1}}
+        visible: {
+            opacity: 1,
+            transition: {duration: 0.2, staggerChildren: 0.1}
+        },
+        exit: {
+            opacity: 0,
+            transition: {
+                duration: 0.2,
+                staggerChildren: 0.1,
+                staggerDirection: -1
+            }
+        }
     }
 
     const itemVariants = {
@@ -28,16 +44,19 @@ const HeaderMenu = () => {
     }
 
     useEffect(() => {
+        if (!mounted) return
+
         if (isOpen) {
             window.scrollTo(0, 0)
             document.body.style.overflow = "hidden"
-        } else
+        } else {
             document.body.style.overflow = ""
+        }
 
         return () => {
             document.body.style.overflow = ""
         }
-    }, [isOpen])
+    }, [isOpen, mounted])
 
     useEffect(() => {
         setIsOpen(false)
@@ -50,8 +69,9 @@ const HeaderMenu = () => {
                 <Link href="/about-us">О Нас</Link>
                 <Link href="/#collection">Коллекция</Link>
             </div>
+
             <div className={styles.m_menu} onClick={onClickHandler}>
-                <svg width="40" height="41" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="40" height="41" viewBox="0 0 40 41" fill="none">
                     <motion.path
                         d="M11 15.5H29"
                         stroke="#292D32"
@@ -78,7 +98,8 @@ const HeaderMenu = () => {
                     />
                 </svg>
             </div>
-            {
+
+            {mounted &&
                 createPortal(
                     <AnimatePresence>
                         {isOpen && (
@@ -104,8 +125,7 @@ const HeaderMenu = () => {
                         )}
                     </AnimatePresence>,
                     document.body
-                )
-            }
+                )}
         </>
     )
 }
