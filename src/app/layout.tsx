@@ -4,6 +4,9 @@ import Header from "@/layouts/header/Header"
 import Footer from "@/layouts/footer/Footer"
 import React from "react"
 import CookieModal from "@/features/cookie-modal/CookieModal"
+import {Provider} from "react-redux"
+import {PersistGate} from "redux-persist/integration/react"
+import {persistor, store} from "@/features/store"
 
 export const metadata: Metadata = {
     title: "Feel your KOKORO",
@@ -18,10 +21,14 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
         <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
         <link rel="manifest" href="/favicons/site.webmanifest" />
         <body>
-        <Header />
-        {children}
-        <Footer />
-        <CookieModal />
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <Header />
+                {children}
+                <Footer />
+                <CookieModal />
+            </PersistGate>
+        </Provider>
         </body>
         </html>
     )
