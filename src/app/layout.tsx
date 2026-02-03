@@ -4,9 +4,7 @@ import Header from "@/layouts/header/Header"
 import Footer from "@/layouts/footer/Footer"
 import React from "react"
 import CookieModal from "@/features/cookie-modal/CookieModal"
-import {Provider} from "react-redux"
-import {PersistGate} from "redux-persist/integration/react"
-import {persistor, store} from "@/features/store"
+import Providers from "@/app/providers"
 
 export const metadata: Metadata = {
     title: "Feel your KOKORO",
@@ -16,19 +14,19 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
     return (
         <html lang="ru">
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
-        <link rel="manifest" href="/favicons/site.webmanifest" />
+        <head>
+            <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
+            <link rel="manifest" href="/favicons/site.webmanifest" />
+        </head>
         <body>
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <Header />
-                {children}
-                <Footer />
-                <CookieModal />
-            </PersistGate>
-        </Provider>
+        <Providers>
+            <Header />
+            {children}
+            <Footer />
+            <CookieModal />
+        </Providers>
         </body>
         </html>
     )
