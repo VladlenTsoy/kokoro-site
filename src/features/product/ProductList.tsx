@@ -1,23 +1,28 @@
 import React from "react"
 import ProductCard from "@/components/product-card/ProductCard"
 import styles from "./ProductList.module.css"
+import type {ProductVariant} from "@/features/product-variants/productVariantsApi"
 
 interface ProductListProps {
     title: React.ReactNode
+    items?: ProductVariant[]
+    limit?: number
 }
 
-const ProductList: React.FC<ProductListProps> = ({title}) => {
+const ProductList: React.FC<ProductListProps> = ({title, items = [], limit}) => {
+    const visibleItems = limit ? items.slice(0, limit) : items
+
     return (
         <div className={styles.product_list}>
             {title}
             <div className={styles.container}>
-                {[1,2,3,4,5].map((id) =>
+                {visibleItems.map(item =>
                     <ProductCard
-                        key={id}
-                        id={id}
-                        title={"Ichigo Bleach"}
-                        price={350000}
-                        image={"/images/t-shirt.png"}
+                        key={item.id}
+                        id={item.id}
+                        title={item.title}
+                        price={item.price}
+                        image={item.images?.[0]?.path || "/images/t-shirt.png"}
                     />
                 )}
             </div>

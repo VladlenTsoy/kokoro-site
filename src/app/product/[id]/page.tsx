@@ -1,4 +1,5 @@
 import React from "react"
+import {notFound} from "next/navigation"
 import styles from "./page.module.css"
 import Breadcrumb from "@/components/breadcrumb/Breadcrumb"
 import ImageGallery from "@/components/image-gallery/ImageGallery"
@@ -7,67 +8,114 @@ import Tabs from "@/components/tabs/Tabs"
 import Button from "@/components/button/Button"
 import Container from "@/layouts/container/Container"
 import ProductPrice from "@/components/product-price/ProductPrice"
+import type {ProductVariant} from "@/features/product-variants/productVariantsApi"
+import ProductVariantSelect from "@/features/product/ProductVariantSelect"
+import getTextValue from "@/utils/getTextValue"
 
-const options = [
-    {
-        title: "L",
-        value: 3
-    },
-    {
-        title: "oversize",
-        value: 1
-    },
-    {
-        title: "M",
-        value: 2
-    }
-]
+async function getProductVariant(id: string): Promise<ProductVariant> {
+    const res = await fetch(`http://localhost:3000/api/product/variants/${id}`, {
+        // next: {revalidate: 10}
+        cache: "no-store"
+    })
 
-const sizeOptions = [
-    {
-        color: "blue",
-        title: "Бело-синий",
-        value: 3
-    },
-    {
-        color: "black",
-        title: "Черный",
-        value: 1
-    }
-]
+    if (!res.ok) notFound()
 
-const tabs = [
-    {
-        label: "Параметры",
-        content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, culpa debitis deserunt ducimus excepturi fuga, impedit labore maiores minima obcaecati pariatur quasi quo sit. Asperiores ea esse hic itaque labore?"
-    },
-    {label: "Состав и уход", content: "Content of Tab 2"}
-]
+    const data = (await res.json()) as ProductVariant | null
+    if (!data) notFound()
 
-const images = [
-    {
-        id: 1,
-        url: "/images/1.jpg"
-    },
-    {
-        id: 2,
-        url: "/images/2.jpg"
-    },
-    {
-        id: 3,
-        url: "/images/3.jpg"
-    }
-]
+    return data
+}
 
-const Page = ({params}: {params: {id: string}}) => {
-    const {title, description, price, discount} = {
-        title: "ФУТБОЛКА TANJIRO",
-        description: "Добро пожаловать в мир Demon Slayer с нашей новой футболкой \"Tanjiro\" от KOKORO! Откройте\n" +
-            "для себя мощь и решимость этого замечательного персонажа, который вдохновляет на настоящие\n" +
-            "подвиги.",
-        price: 350000,
-        discount: 50
-    }
+const Page = async ({params}: {params: {id: string}}) => {
+    const product = await getProductVariant(params.id)
+
+    const images = product.images?.length
+        ? product.images.map(image => ({
+            id: image.id,
+            url: image.path
+        }))
+        : []
+
+    const sizeOptions = product.sizes?.length
+        ? product.sizes.map(item => ({
+            title: getTextValue(item.size.title),
+            value: item.id
+        }))
+        : []
+
+    const sizeTitleById = new Map<number, string>(
+        product.sizes?.map(item => [item.size.id, getTextValue(item.size.title)]) ?? []
+    )
+
+    const measurementSizeIds = new Set<number>()
+    product.measurements?.forEach(item => {
+        if (item.descriptions && typeof item.descriptions === "object") {
+            Object.keys(item.descriptions as Record<string, unknown>).forEach(key => {
+                const id = Number(key)
+                if (!Number.isNaN(id)) measurementSizeIds.add(id)
+            })
+        }
+    })
+
+    const measurementColumns = Array.from(measurementSizeIds)
+        .sort((a, b) => a - b)
+        .map(id => ({
+            id,
+            title: sizeTitleById.get(id) || String(id)
+        }))
+
+    const colorOptions = product.color
+        ? [
+            {
+                color: product.color.hex,
+                title: getTextValue(product.color.title),
+                value: product.id
+            },
+            ...(product.related_variants ?? []).map(variant => ({
+                color: variant.color.hex,
+                title: getTextValue(variant.color.title),
+                value: variant.id
+            }))
+        ]
+        : []
+
+    const measurementsContent = product.measurements?.length
+        ? (
+            <table>
+                <thead>
+                <tr>
+                    <th />
+                    {measurementColumns.map(column => (
+                        <th key={column.id}>{column.title}</th>
+                    ))}
+                </tr>
+                </thead>
+                <tbody>
+                {product.measurements.map(item => (
+                    <tr key={item.id}>
+                        <td>{getTextValue(item.title)}</td>
+                        {measurementColumns.map(column => (
+                            <td key={column.id}>
+                                {getTextValue(item.descriptions?.[String(column.id)])}
+                            </td>
+                        ))}
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        )
+        : "Нет данных"
+
+    const tabs = [
+        ...(product?.product?.properties.map(property => ({
+            label: property.title,
+            content: <div dangerouslySetInnerHTML={{__html: property.description}} />
+        }))),
+        {
+            label: "Обмеры",
+            content: measurementsContent
+        }
+    ]
 
     return (
         <Container>
@@ -77,15 +125,15 @@ const Page = ({params}: {params: {id: string}}) => {
                 <div className={styles.details}>
                     <div className={styles.sticky}>
                         <div className={styles.product_header}>
-                            <h1 className={styles.title}>{title}</h1>
-                            <ProductPrice price={price} discount={discount} />
+                            <h1 className={styles.title}>{getTextValue(product.title)}</h1>
+                            <ProductPrice price={product.price} />
                         </div>
                         <div className={styles.description}>
-                            {description}
+                            {getTextValue(product.measurements?.[0]?.descriptions?.[String(sizeOptions[0]?.value)] ?? "")}
                         </div>
                         <div className={styles.options}>
-                            <Select options={options} />
                             <Select options={sizeOptions} />
+                            <ProductVariantSelect options={colorOptions} />
                         </div>
                         <div className={styles.tabs}>
                             <Tabs tabs={tabs} />
