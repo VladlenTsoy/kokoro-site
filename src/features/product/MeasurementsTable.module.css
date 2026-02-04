@@ -1,0 +1,13 @@
+.container {
+    border-collapse: collapse;
+}
+
+.container th, .container td {
+    border: 1px solid lightgray;
+    text-align: center;
+    padding: .5rem 1rem;
+}
+
+.container td:first-child {
+    font-weight: bold;
+}

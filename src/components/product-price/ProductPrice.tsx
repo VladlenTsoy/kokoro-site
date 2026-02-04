@@ -19,11 +19,11 @@ const ProductPrice: React.FC<ProductPriceProps> = ({price, discount}) => {
                         <path d="M1 17C19.1615 11.1536 64.9876 -0.210397 103 1.10505" stroke="#F04438"
                               strokeWidth="2" strokeLinecap="round" />
                     </svg>
-                    {formatPrice(price)}сум
+                    {formatPrice(price)} сум
                 </div>
             }
             <div className={styles.price}>
-                {formatPrice(discount ? calculateDiscountedTotal(price, discount) : price)}сум
+                {formatPrice(discount ? calculateDiscountedTotal(price, discount) : price)} сум
             </div>
         </div>
     )

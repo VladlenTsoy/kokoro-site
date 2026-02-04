@@ -11,11 +11,13 @@ import ProductPrice from "@/components/product-price/ProductPrice"
 import type {ProductVariant} from "@/features/product-variants/productVariantsApi"
 import ProductVariantSelect from "@/features/product/ProductVariantSelect"
 import getTextValue from "@/utils/getTextValue"
+import MeasurementsTable from "@/features/product/MeasurementsTable"
+import {mapColorOptions, mapImages, mapSizeOptions} from "@/features/product/productViewModel"
 
 async function getProductVariant(id: string): Promise<ProductVariant> {
     const res = await fetch(`http://localhost:3000/api/product/variants/${id}`, {
-        // next: {revalidate: 10}
-        cache: "no-store"
+        next: {revalidate: 10}
+        // cache: "no-store"
     })
 
     if (!res.ok) notFound()
@@ -29,93 +31,23 @@ async function getProductVariant(id: string): Promise<ProductVariant> {
 const Page = async ({params}: {params: {id: string}}) => {
     const product = await getProductVariant(params.id)
 
-    const images = product.images?.length
-        ? product.images.map(image => ({
-            id: image.id,
-            url: image.path
-        }))
+    const images = mapImages(product.images)
+    const sizeOptions = mapSizeOptions(product.sizes)
+    const colorOptions = mapColorOptions(product)
+
+    const propertyTabs = product.product?.properties?.map(property => ({
+        label: getTextValue(property.title),
+        content: <div dangerouslySetInnerHTML={{__html: getTextValue(property.description)}} />
+    })) ?? []
+
+    const measurementTabs = product.measurements?.length
+        ? [{
+            label: "Таблица размеров",
+            content: <MeasurementsTable measurements={product.measurements} sizes={product.sizes} />
+        }]
         : []
 
-    const sizeOptions = product.sizes?.length
-        ? product.sizes.map(item => ({
-            title: getTextValue(item.size.title),
-            value: item.id
-        }))
-        : []
-
-    const sizeTitleById = new Map<number, string>(
-        product.sizes?.map(item => [item.size.id, getTextValue(item.size.title)]) ?? []
-    )
-
-    const measurementSizeIds = new Set<number>()
-    product.measurements?.forEach(item => {
-        if (item.descriptions && typeof item.descriptions === "object") {
-            Object.keys(item.descriptions as Record<string, unknown>).forEach(key => {
-                const id = Number(key)
-                if (!Number.isNaN(id)) measurementSizeIds.add(id)
-            })
-        }
-    })
-
-    const measurementColumns = Array.from(measurementSizeIds)
-        .sort((a, b) => a - b)
-        .map(id => ({
-            id,
-            title: sizeTitleById.get(id) || String(id)
-        }))
-
-    const colorOptions = product.color
-        ? [
-            {
-                color: product.color.hex,
-                title: getTextValue(product.color.title),
-                value: product.id
-            },
-            ...(product.related_variants ?? []).map(variant => ({
-                color: variant.color.hex,
-                title: getTextValue(variant.color.title),
-                value: variant.id
-            }))
-        ]
-        : []
-
-    const measurementsContent = product.measurements?.length
-        ? (
-            <table>
-                <thead>
-                <tr>
-                    <th />
-                    {measurementColumns.map(column => (
-                        <th key={column.id}>{column.title}</th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {product.measurements.map(item => (
-                    <tr key={item.id}>
-                        <td>{getTextValue(item.title)}</td>
-                        {measurementColumns.map(column => (
-                            <td key={column.id}>
-                                {getTextValue(item.descriptions?.[String(column.id)])}
-                            </td>
-                        ))}
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-        )
-        : "Нет данных"
-
-    const tabs = [
-        ...(product?.product?.properties.map(property => ({
-            label: property.title,
-            content: <div dangerouslySetInnerHTML={{__html: property.description}} />
-        }))),
-        {
-            label: "Обмеры",
-            content: measurementsContent
-        }
-    ]
+    const tabs = [...propertyTabs, ...measurementTabs]
 
     return (
         <Container>
@@ -126,11 +58,15 @@ const Page = async ({params}: {params: {id: string}}) => {
                     <div className={styles.sticky}>
                         <div className={styles.product_header}>
                             <h1 className={styles.title}>{getTextValue(product.title)}</h1>
-                            <ProductPrice price={product.price}
-                                          discount={product?.discount?.discountPercent ? Number(product?.discount?.discountPercent) : undefined} />
+                            <ProductPrice
+                                price={product.price}
+                                discount={product?.discount?.discountPercent ? Number(product?.discount?.discountPercent) : undefined}
+                            />
                         </div>
                         <div className={styles.description}>
-                            {getTextValue(product.measurements?.[0]?.descriptions?.[String(sizeOptions[0]?.value)] ?? "")}
+                            Мягко прилегающая к телу зип-худи создан из высококачественного хлопка. Вместительный
+                            основной карман скрывает внутри несколько маленьких карманов для хранения мелочи, ключей или
+                            телефона. Свободный крой позволит вам оставаться активным даже в прохладную погоду.
                         </div>
                         <div className={styles.options}>
                             <Select options={sizeOptions} />

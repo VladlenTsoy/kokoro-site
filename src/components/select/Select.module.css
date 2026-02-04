@@ -12,7 +12,7 @@
     gap: .5rem;
     cursor: pointer;
     justify-content: space-between;
-    min-width: 80px;
+    min-width: 100px;
     position: relative;
     height: 55px;
 }

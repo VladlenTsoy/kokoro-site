@@ -4,7 +4,7 @@ import ProductList from "@/features/product/ProductList"
 import ProductBanner from "@/features/product-banner/ProductBanner"
 import type {ProductVariant, ProductVariantsResponse} from "@/features/product-variants/productVariantsApi"
 
-const PRODUCTS_LIMIT = 6
+const PRODUCTS_LIMIT = 8
 
 async function getProductVariants(limit: number): Promise<ProductVariant[]> {
     const res = await fetch(`http://localhost:3000/api/product/variants?pageSize=${limit}&sortOrder=desc`, {
