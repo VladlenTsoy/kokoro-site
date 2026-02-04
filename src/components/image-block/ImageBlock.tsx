@@ -68,7 +68,7 @@ const ImageBlock: React.FC<ImageBlockProps> = (
                             width={width}
                             height={height}
                             fill={fill}
-                            objectFit="cover"
+                            style={{objectFit: "cover"}}
                             sizes="(max-width: 768px) 100%"
                             quality={quality}
                         />

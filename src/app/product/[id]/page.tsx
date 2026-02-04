@@ -117,6 +117,7 @@ const Page = async ({params}: {params: {id: string}}) => {
         }
     ]
 
+    console.log(product.discount)
     return (
         <Container>
             <Breadcrumb />
@@ -126,7 +127,8 @@ const Page = async ({params}: {params: {id: string}}) => {
                     <div className={styles.sticky}>
                         <div className={styles.product_header}>
                             <h1 className={styles.title}>{getTextValue(product.title)}</h1>
-                            <ProductPrice price={product.price} />
+                            <ProductPrice price={product.price}
+                                          discount={product?.discount?.discountPercent ? Number(product?.discount?.discountPercent) : undefined} />
                         </div>
                         <div className={styles.description}>
                             {getTextValue(product.measurements?.[0]?.descriptions?.[String(sizeOptions[0]?.value)] ?? "")}

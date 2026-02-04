@@ -70,7 +70,10 @@ export interface ProductVariant {
     status: ProductVariantStatus
     sizes: ProductVariantSize[]
     images: ProductVariantImage[]
-    discount: Record<string, unknown>
+    discount?: {
+        discountPercent?: string
+        endDate?: string
+    }
     measurements: ProductVariantMeasurement[]
     related_variants: {
         id: number
