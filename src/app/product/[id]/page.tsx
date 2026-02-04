@@ -117,7 +117,6 @@ const Page = async ({params}: {params: {id: string}}) => {
         }
     ]
 
-    console.log(product.discount)
     return (
         <Container>
             <Breadcrumb />
