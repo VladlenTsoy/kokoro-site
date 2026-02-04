@@ -2,6 +2,7 @@ import {configureStore} from "@reduxjs/toolkit"
 import {persistCombineReducers, persistStore} from "redux-persist"
 import storage from "redux-persist/lib/storage"
 import {productVariantsApi} from "@/features/product-variants/productVariantsApi"
+import {cartReducer} from "@/features/cart/cartSlice"
 
 const persistConfig = {
     key: "root",
@@ -10,7 +11,8 @@ const persistConfig = {
 }
 
 const persistedCombineReducers = persistCombineReducers(persistConfig, {
-    [productVariantsApi.reducerPath]: productVariantsApi.reducer
+    [productVariantsApi.reducerPath]: productVariantsApi.reducer,
+    cart: cartReducer
 })
 
 export const store = configureStore({
@@ -22,3 +24,6 @@ export const store = configureStore({
 })
 
 export const persistor = persistStore(store)
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

@@ -3,16 +3,14 @@ import {notFound} from "next/navigation"
 import styles from "./page.module.css"
 import Breadcrumb from "@/components/breadcrumb/Breadcrumb"
 import ImageGallery from "@/components/image-gallery/ImageGallery"
-import Select from "@/components/select/Select"
 import Tabs from "@/components/tabs/Tabs"
-import Button from "@/components/button/Button"
 import Container from "@/layouts/container/Container"
 import ProductPrice from "@/components/product-price/ProductPrice"
 import type {ProductVariant} from "@/features/product-variants/productVariantsApi"
-import ProductVariantSelect from "@/features/product/ProductVariantSelect"
 import getTextValue from "@/utils/getTextValue"
 import MeasurementsTable from "@/features/product/MeasurementsTable"
 import {mapColorOptions, mapImages, mapSizeOptions} from "@/features/product/productViewModel"
+import ProductPurchaseControls from "./ProductPurchaseControls"
 
 async function getProductVariant(id: string): Promise<ProductVariant> {
     const res = await fetch(`http://localhost:3000/api/product/variants/${id}`, {
@@ -68,16 +66,19 @@ const Page = async ({params}: {params: {id: string}}) => {
                             основной карман скрывает внутри несколько маленьких карманов для хранения мелочи, ключей или
                             телефона. Свободный крой позволит вам оставаться активным даже в прохладную погоду.
                         </div>
-                        <div className={styles.options}>
-                            <Select options={sizeOptions} />
-                            <ProductVariantSelect options={colorOptions} />
-                        </div>
-                        <div className={styles.tabs}>
-                            <Tabs tabs={tabs} />
-                        </div>
-                        <div className={styles.actions}>
-                            <Button block>Добавить в корзину</Button>
-                        </div>
+                        <ProductPurchaseControls
+                            productId={product.id}
+                            title={product.title}
+                            price={product.price}
+                            image={images[0]?.url || "/images/t-shirt.png"}
+                            sizeOptions={sizeOptions}
+                            colorOptions={colorOptions}
+                            colorTitle={product.color?.title}
+                        >
+                            <div className={styles.tabs}>
+                                <Tabs tabs={tabs} />
+                            </div>
+                        </ProductPurchaseControls>
                     </div>
                 </div>
             </div>

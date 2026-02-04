@@ -1,49 +1,38 @@
+"use client"
+
 import React from "react"
 import styles from "./CartTotalBlock.module.css"
 import Button from "@/components/button/Button"
 import {formatPrice} from "@/utils/formatPrice"
 import Input from "@/components/input/Input"
-
-interface CartTotalBlockProps {
-
-}
+import {useSelector} from "react-redux"
+import {selectCartItems, selectCartTotal} from "@/features/cart/cartSlice"
 
 const CartTotalBlock = () => {
+    const items = useSelector(selectCartItems)
+    const total = useSelector(selectCartTotal)
+
     return (
         <div className={styles.container}>
             <h5 className={styles.title}>Ваша корзина:</h5>
             <div className={styles.product_list}>
-                <div className={styles.product_item}>
-                    <div className={styles.label}>Tanjiro Demon Slayer:</div>
-                    <div className={styles.price}>
-                        <span>1</span>
-                        <span>x</span>
-                        {formatPrice(350000)}cум
+                {items.map(item => (
+                    <div className={styles.product_item} key={item.id}>
+                        <div className={styles.label}>{item.title}</div>
+                        <div className={styles.price}>
+                            <span>{item.qty}</span>
+                            <span>x</span>
+                            {formatPrice(item.price)}cум
+                        </div>
                     </div>
-                </div>
-                <div className={styles.product_item}>
-                    <div className={styles.label}>Tanjiro Demon Slayer:</div>
-                    <div className={styles.price}>
-                        <span>1</span>
-                        <span>x</span>
-                        {formatPrice(350000)}cум
-                    </div>
-                </div>
-                <div className={styles.product_item}>
-                    <div className={styles.label}>Tanjiro Demon Slayer:</div>
-                    <div className={styles.price}>
-                        <span>1</span>
-                        <span>x</span>
-                        {formatPrice(350000)}cум
-                    </div>
-                </div>
+                ))}
             </div>
             <div className={styles.promo_code}>
                 <Input placeholder="Введите промокод..." style={{paddingLeft: 0, paddingRight: 0}} />
             </div>
             <div className={styles.total}>
                 <div className={styles.label}>Всего:</div>
-                <div className={styles.value}>2.850.000сум</div>
+                <div className={styles.value}>{formatPrice(total)}сум</div>
             </div>
             <Button block>
                 К оформлению

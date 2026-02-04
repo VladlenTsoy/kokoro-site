@@ -27,6 +27,8 @@ export interface ProductVariantStatus {
 
 export interface ProductVariantSize {
     id: number
+    product_variant_id: number
+    size_id: number
     cost_price: number
     qty: number
     min_qty: number
