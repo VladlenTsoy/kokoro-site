@@ -1,6 +1,6 @@
 .imageBlock {
-    height: 100%;
     width: 100%;
+    aspect-ratio: 3 / 4;
     position: relative;
 }
 
@@ -19,10 +19,4 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
-}
-
-.image img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover!important;
 }
