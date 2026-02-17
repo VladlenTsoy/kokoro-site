@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import {formatPrice} from "@/utils/formatPrice"
 import getTextValue from "@/utils/getTextValue"
+import ImageBlock from "@/components/image-block/ImageBlock"
 
 interface ProductCardProps {
     id: number
@@ -20,7 +21,7 @@ const ProductCard: React.FC<ProductCardProps> = ({id, title, price, image, disco
         <Link href={`/product/${id}`} passHref>
             <div className={styles.product_card}>
                 <div className={styles.image_wrapper}>
-                    <Image className={styles.image} src={image} alt={safeTitle} fill priority={false} style={{objectFit: "cover"}} />
+                    <ImageBlock src={image} alt={safeTitle} priority={false} fill />
                 </div>
                 <div className={styles.title}>{safeTitle}</div>
                 <div className={styles.price}>{formatPrice(price)} сум</div>

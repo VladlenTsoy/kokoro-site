@@ -8,15 +8,8 @@
 }
 
 .image_wrapper {
-    position: relative;
     margin-bottom: 1rem;
-    aspect-ratio: 3 / 4;
     width: 100%;
-}
-
-.image {
-    /*margin-bottom: 1rem;*/
-    /*margin-top: 3rem;*/
 }
 
 .title {
