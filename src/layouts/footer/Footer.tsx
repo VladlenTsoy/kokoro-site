@@ -54,7 +54,7 @@ const Footer = () => {
                     </ul>
                     <ul className={styles.items}>
                         <li className={styles.title}>Контакты</li>
-                        <li className={cn(styles.item, styles.desc)}>Tel: <a href="tel:+998338403006">+998-33-840-30-06</a></li>
+                        <li className={cn(styles.item, styles.desc)}>Tel: <a href="tel:+998338403006">+998-70-019-29-33</a></li>
                         <li className={cn(styles.item, styles.desc)}>Email: <a href="mailto:info@kokoro.uz">info@kokoro.uz</a></li>
                         <li className={cn(styles.item, styles.desc)}><a href="https://www.instagram.com/kokoro.mode/" target="_blank">Instagram</a></li>
                         <li className={cn(styles.item, styles.desc)}><a href="https://t.me/kokoro_wear" target="_blank">Telegram</a></li>
