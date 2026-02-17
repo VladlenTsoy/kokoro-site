@@ -10,7 +10,7 @@ import type {ProductVariant} from "@/features/product-variants/productVariantsAp
 import getTextValue from "@/utils/getTextValue"
 import MeasurementsTable from "@/features/product/MeasurementsTable"
 import {mapColorOptions, mapImages, mapSizeOptions} from "@/features/product/productViewModel"
-import ProductPurchaseControls from "./ProductPurchaseControls"
+import ProductPurchaseControls from "@/features/product/ProductPurchaseControls"
 
 async function getProductVariant(id: string): Promise<ProductVariant> {
     const res = await fetch(`http://localhost:3000/api/product/variants/${id}`, {
@@ -70,7 +70,7 @@ const Page = async ({params}: {params: {id: string}}) => {
                             productId={product.id}
                             title={product.title}
                             price={product.price}
-                            image={images[0]?.url || "/images/t-shirt.png"}
+                            image={images[0]?.url}
                             sizeOptions={sizeOptions}
                             colorOptions={colorOptions}
                             colorTitle={product.color?.title}

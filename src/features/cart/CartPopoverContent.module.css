@@ -1,0 +1,105 @@
+.container {
+    position: relative;
+}
+
+.content {
+    padding: 30px 20px;
+}
+
+.close_icon {
+    cursor: pointer;
+    position: absolute;
+    top: 17px;
+    right: 17px;
+}
+
+.close_icon svg path {
+    transition: stroke 0.3s ease-in-out;
+}
+
+.close_icon:hover svg path {
+    stroke: var(--primary-color);
+}
+
+.popover_title {
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.popover_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #2b2b2b;
+}
+
+.popover_row + .popover_row {
+    margin-top: 6px;
+}
+
+.preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.preview_image {
+    position: relative;
+    height: 120px;
+    margin-bottom: 12px;
+}
+
+.preview_title {
+    font-family: 'Druk Wide Medium Cy';
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 0.95;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.preview_tags {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.preview_price {
+    font-family: 'Halvar Breitschrift';
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 100%;
+    text-transform: uppercase;
+}
+
+.empty {
+    text-align: center;
+    color: #7f7f7f;
+}
+
+.footer {
+    border-top: 1px solid #C4C4C4;
+    padding: 18px 20px 30px 20px;
+}
+
+.footer .popover_footer_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.footer .popover_footer_row .secondary {
+    color: var(--secondary-color);
+}
+
+.footer .popover_footer_row .total_price {
+    font-weight: bold;
+}

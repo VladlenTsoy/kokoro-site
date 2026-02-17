@@ -1,25 +1,92 @@
-import React from "react"
+"use client"
+
+import React, {useEffect, useRef, useState} from "react"
 import styles from "./HeaderSubMenu.module.css"
+import {useSelector} from "react-redux"
+import {usePathname, useRouter} from "next/navigation"
+import {selectCartCount, selectCartLastAddedAt} from "@/features/cart/cartSlice"
+import Popover from "@/components/popover/Popover"
+import CartIcon from "@/components/icons/CartIcon"
+import CartPopoverContent from "@/features/cart/CartPopoverContent"
+
+const AUTO_CLOSE_MS = 5_000
 
 const HeaderSubMenu = () => {
+    const pathname = usePathname()
+    const router = useRouter()
+    const isCartPage = pathname === "/cart"
+    const count = useSelector(selectCartCount)
+    const lastAddedAt = useSelector(selectCartLastAddedAt)
+
+    const [isOpen, setIsOpen] = useState(false)
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const lastHandledAddRef = useRef<number | null>(null)
+    const cartRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        // Prevent auto-open on initial hydration from persisted state.
+        if (lastHandledAddRef.current === null) {
+            lastHandledAddRef.current = lastAddedAt
+            return
+        }
+
+        if (!lastAddedAt || lastHandledAddRef.current === lastAddedAt) return
+        lastHandledAddRef.current = lastAddedAt
+
+        if (isCartPage) {
+            setIsOpen(false)
+            return
+        }
+
+        setIsOpen(true)
+
+        if (timerRef.current) clearTimeout(timerRef.current)
+        timerRef.current = setTimeout(() => {
+            setIsOpen(false)
+        }, AUTO_CLOSE_MS)
+
+        return () => {
+            if (timerRef.current) clearTimeout(timerRef.current)
+        }
+    }, [lastAddedAt, isCartPage])
+
+    useEffect(() => {
+        setIsOpen(false)
+        if (timerRef.current) clearTimeout(timerRef.current)
+    }, [pathname])
+
+    const handleClick = () => {
+        setIsOpen(false)
+        router.push("/cart")
+    }
+
+    const onCloseHandler = () => {
+        setIsOpen(false)
+    }
+
     return (
         <div className={styles.sub_menu}>
-            <div className={styles.cart_icon_block}>
-                <svg width="22" height="23" viewBox="0 0 22 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        className={styles.cart_path_one}
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M14.2971 6.45837H7.69709C4.58043 6.45837 4.26877 7.91587 4.0671 9.69421L3.24209 16.5692C2.96709 18.8242 3.66376 20.6667 6.88126 20.6667H15.1221C18.1933 20.6667 18.963 18.9783 18.79 16.856C18.7617 16.8592 18.733 16.8609 18.704 16.8609H7.32812C6.91391 16.8609 6.57812 16.5251 6.57812 16.1109C6.57812 15.6967 6.91391 15.3609 7.32812 15.3609H18.6163L17.9363 9.69421C17.7254 7.91587 17.4138 6.45837 14.2971 6.45837Z"
-                    />
-                    <path
-                        className={styles.cart_path_two}
-                        d="M7.32812 7.83337V4.62504C7.32812 3.25004 8.24479 2.33337 9.61979 2.33337H12.3698C13.7448 2.33337 14.6615 3.25004 14.6615 4.62504V7.83337"
-                        strokeOpacity="0.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    />
-                </svg>
+            <div
+                ref={cartRef}
+                className={styles.cart_wrapper}
+            >
+                <div className={styles.card_block}>
+                    <div className={styles.cart_icon_block} onClick={handleClick}>
+                        <CartIcon className={styles.cart_icon} />
+                    </div>
+                    {count > 0 && <span className={styles.cart_badge}>[{count}]</span>}
+                </div>
+                <Popover
+                    open={isOpen && !isCartPage}
+                    anchorRef={cartRef}
+                    arrowOffset={count > 0 ? 28 : 0}
+                    width={350}
+                    offset={22}
+                    usePortal
+                    sticky
+                >
+                    <CartPopoverContent onClose={onCloseHandler} />
+                </Popover>
             </div>
         </div>
     )

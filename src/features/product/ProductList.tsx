@@ -22,7 +22,7 @@ const ProductList: React.FC<ProductListProps> = ({title, items = [], limit}) => 
                         id={item.id}
                         title={item.title}
                         price={item.price}
-                        discountedPrice={item?.discount?.discountPercent ? Number(item?.discount?.discountPercent) : undefined}
+                        discount={item?.discount?.discountPercent ? Number(item?.discount?.discountPercent) : undefined}
                         image={item.images?.[0]?.path || "/images/t-shirt.png"}
                     />
                 )}

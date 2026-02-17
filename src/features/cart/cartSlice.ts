@@ -14,10 +14,14 @@ export interface CartItem {
 
 interface CartState {
     items: CartItem[]
+    lastAddedAt: number | null
+    lastAddedItemId: string | null
 }
 
 const initialState: CartState = {
-    items: []
+    items: [],
+    lastAddedAt: null,
+    lastAddedItemId: null
 }
 
 const buildCartItemId = (productVariantId: number, sizeId: number | null) =>
@@ -59,6 +63,8 @@ const cartSlice = createSlice({
 
             if (existing) {
                 existing.qty += qty
+                state.lastAddedAt = Date.now()
+                state.lastAddedItemId = id
                 return
             }
 
@@ -73,6 +79,8 @@ const cartSlice = createSlice({
                 sizeTitle,
                 colorTitle
             })
+            state.lastAddedAt = Date.now()
+            state.lastAddedItemId = id
         },
         updateQty: (state, action: PayloadAction<UpdateQtyPayload>) => {
             const item = state.items.find(entry => entry.id === action.payload.id)
@@ -85,9 +93,13 @@ const cartSlice = createSlice({
         },
         removeItem: (state, action: PayloadAction<string>) => {
             state.items = state.items.filter(item => item.id !== action.payload)
+            if (state.lastAddedItemId === action.payload) {
+                state.lastAddedItemId = null
+            }
         },
         clearCart: state => {
             state.items = []
+            state.lastAddedItemId = null
         }
     }
 })
@@ -100,3 +112,5 @@ export const selectCartTotal = (state: {cart: CartState}) =>
     state.cart.items.reduce((sum, item) => sum + item.price * item.qty, 0)
 export const selectCartCount = (state: {cart: CartState}) =>
     state.cart.items.reduce((sum, item) => sum + item.qty, 0)
+export const selectCartLastAddedAt = (state: {cart: CartState}) => state.cart.lastAddedAt
+export const selectCartLastAddedItemId = (state: {cart: CartState}) => state.cart.lastAddedItemId

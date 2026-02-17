@@ -33,7 +33,7 @@ const Tabs: React.FC<TabsProps> = ({tabs}) => {
                 ))}
             </div>
             <div className={styles.tab_content}>
-                {tabs[activeTab].content}
+                {tabs[activeTab]?.content}
             </div>
         </div>
     )

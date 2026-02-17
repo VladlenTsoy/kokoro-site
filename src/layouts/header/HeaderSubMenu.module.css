@@ -3,6 +3,16 @@
     padding-right: 24px;
 }
 
+.sub_menu .cart_wrapper {
+    display: inline-flex;
+    position: relative;
+}
+
+.sub_menu .card_block {
+    display: flex;
+    align-items: center;
+}
+
 .sub_menu .cart_icon_block {
     display: inline-flex;
     cursor: pointer;
@@ -10,6 +20,7 @@
     width: 30px;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .sub_menu .cart_icon_block svg {
@@ -17,22 +28,32 @@
     width: 20px;
 }
 
-.sub_menu .cart_icon_block .cart_path_one {
+.sub_menu .cart_icon_block .cart_icon {
+    height: 20px;
+    width: 20px;
+}
+
+.sub_menu .cart_icon_block .cart_icon path:first-child {
     fill: #090909;
     transition: all .3s ease-in-out;
 }
 
-.sub_menu .cart_icon_block .cart_path_two {
+.sub_menu .cart_icon_block .cart_icon path:last-child {
     stroke: #363A42;
     transition: all .3s ease-in-out;
 }
 
-.sub_menu .cart_icon_block:hover .cart_path_one {
+
+.sub_menu .cart_icon_block:hover .cart_icon path:first-child {
     fill: var(--primary-color);
 }
 
-.sub_menu .cart_icon_block:hover .cart_path_two {
+.sub_menu .cart_icon_block:hover .cart_icon path:last-child {
     stroke: var(--primary-color);
+}
+
+.sub_menu .card_block .cart_badge {
+    color: var(--secondary-color);
 }
 
 @media (max-width: 992px) {
