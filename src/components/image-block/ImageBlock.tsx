@@ -3,6 +3,7 @@
 import React, {useEffect, useState} from "react"
 import styled from "./ImageBlock.module.css"
 import NextImage from "next/image"
+import {AnimatePresence, motion} from "framer-motion"
 
 type ImageBlockBaseProps = {
     src: string
@@ -46,7 +47,7 @@ const ImageBlock: React.FC<ImageBlockProps> = (
 
     return (
         <div className={styled.imageBlock}>
-            <div className={styled.image}>
+            <div className={styled.image} key="image">
                 <NextImage
                     src={src}
                     alt={alt}
@@ -64,13 +65,21 @@ const ImageBlock: React.FC<ImageBlockProps> = (
                     }}
                 />
             </div>
-            {loading && (
-                <div className={styled.loading}>
-                    Loading...
-                </div>
-            )}
+            <AnimatePresence>
+                {loading && (
+                    <motion.div
+                        className={styled.loading}
+                        initial={{opacity: 1}}
+                        animate={{opacity: 1}}
+                        exit={{opacity: 0}}
+                        transition={{duration: 0.25, ease: "easeOut"}}
+                    >
+                        Loading...
+                    </motion.div>
+                )}
+            </AnimatePresence>
             {error && (
-                <div className={styled.loading}>
+                <div className={styled.loading} key="image">
                     ERROR
                 </div>
             )}
