@@ -53,7 +53,7 @@
 }
 
 .preview_title {
-    font-family: 'Druk Wide Medium Cy';
+    font-family: var(--font-header), sans-serif;
     font-weight: 700;
     font-size: 16px;
     line-height: 0.95;
@@ -71,7 +71,7 @@
 }
 
 .preview_price {
-    font-family: 'Halvar Breitschrift';
+    font-family: var(--font-header), sans-serif;
     font-weight: 500;
     font-size: 20px;
     line-height: 100%;

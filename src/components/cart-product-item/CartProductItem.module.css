@@ -25,7 +25,7 @@
 }
 
 .product_item .title {
-    font-family: var(--font-header);
+    font-family: var(--font-header), sans-serif;
     font-size: 22px;
     font-weight: 700;
     text-align: left;

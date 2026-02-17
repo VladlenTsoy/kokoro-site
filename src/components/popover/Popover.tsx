@@ -67,7 +67,7 @@ const Popover: React.FC<PopoverProps> = (
             window.removeEventListener("resize", handle)
             window.removeEventListener("scroll", handle, true)
         }
-    }, [open, align, offset, width, anchorRef])
+    }, [open, align, offset, width, anchorRef, updatePosition])
 
     const content = (
         <AnimatePresence>
