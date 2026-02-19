@@ -1,131 +1,92 @@
 "use client"
 
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import styles from "./HeaderMenu.module.css"
 import Link from "next/link"
-import {AnimatePresence, motion} from "framer-motion"
-import {createPortal} from "react-dom"
 import {usePathname} from "next/navigation"
+import {type CategoryWithSubCategoriesType} from "@/features/categories/CategoryType"
+import MenuCategories from "@/layouts/header/menu-categories/MenuCategories"
+import MobileHeaderMenu from "@/layouts/header/mobile-header-menu/MobileHeaderMenu"
 
-const HeaderMenu = () => {
+interface Props {
+    categories: CategoryWithSubCategoriesType[]
+}
+
+const HeaderMenu: React.FC<Props> = ({categories}) => {
     const pathname = usePathname()
 
-    const [isOpen, setIsOpen] = useState(false)
-    const [mounted, setMounted] = useState(false)
+    const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false)
+    const [isOpenCollectionMenu, setIsOpenCollectionMenu] = useState(false)
+    const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-    useEffect(() => {
-        setMounted(true)
-    }, [])
-
-    const onClickHandler = () => {
-        setIsOpen(prev => !prev)
+    const onClickToggleMobileMenu = () => {
+        setIsOpenMobileMenu(prev => !prev)
     }
 
-    const menuVariants = {
-        hidden: {opacity: 0},
-        visible: {
-            opacity: 1,
-            transition: {duration: 0.2, staggerChildren: 0.1}
-        },
-        exit: {
-            opacity: 0,
-            transition: {
-                duration: 0.2,
-                staggerChildren: 0.1,
-                staggerDirection: -1
+    const keepCollectionMenuOpen = () => {
+        if (closeTimerRef.current) {
+            clearTimeout(closeTimerRef.current)
+        }
+    }
+
+    const openCollectionMenu = () => {
+        keepCollectionMenuOpen()
+        setIsOpenCollectionMenu(true)
+    }
+
+    const closeCollectionMenu = () => {
+        if (closeTimerRef.current) {
+            clearTimeout(closeTimerRef.current)
+        }
+        closeTimerRef.current = setTimeout(() => {
+            setIsOpenCollectionMenu(false)
+        }, 120)
+    }
+
+    useEffect(() => {
+        setIsOpenMobileMenu(false)
+        setIsOpenCollectionMenu(false)
+        if (closeTimerRef.current) {
+            clearTimeout(closeTimerRef.current)
+        }
+    }, [pathname])
+
+    useEffect(() => {
+        return () => {
+            if (closeTimerRef.current) {
+                clearTimeout(closeTimerRef.current)
             }
         }
-    }
-
-    const itemVariants = {
-        hidden: {opacity: 0, y: 50},
-        visible: {opacity: 1, y: 0},
-        exit: {opacity: 0, y: 50}
-    }
-
-    useEffect(() => {
-        if (!mounted) return
-
-        if (isOpen) {
-            window.scrollTo(0, 0)
-            document.body.style.overflow = "hidden"
-        } else {
-            document.body.style.overflow = ""
-        }
-
-        return () => {
-            document.body.style.overflow = ""
-        }
-    }, [isOpen, mounted])
-
-    useEffect(() => {
-        setIsOpen(false)
-    }, [pathname])
+    }, [])
 
     return (
         <>
-            <div className={styles.menu}>
-                <Link href="/">Главная</Link>
-                <Link href="/about-us">О Нас</Link>
-                <Link href="/#collection">Коллекция</Link>
+            <div
+                className={styles.menu_wrapper}
+            >
+                <div className={styles.menu}>
+                    <Link href="/">Главная</Link>
+                    <Link href="/about-us">О Нас</Link>
+                    <Link
+                        href="/collections"
+                        className={styles.collection_trigger}
+                        onMouseLeave={closeCollectionMenu}
+                        onMouseEnter={openCollectionMenu}
+                    >
+                        Коллекция
+                    </Link>
+                </div>
             </div>
-
-            <div className={styles.m_menu} onClick={onClickHandler}>
-                <svg width="40" height="41" viewBox="0 0 40 41" fill="none">
-                    <motion.path
-                        d="M11 15.5H29"
-                        stroke="#292D32"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        animate={isOpen ? {rotate: 45, y: 5} : {rotate: 0, y: 0}}
-                        transition={{duration: 0.3}}
-                    />
-                    <motion.path
-                        d="M11 20.5H29"
-                        stroke="#292D32"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        animate={isOpen ? {opacity: 0} : {opacity: 1}}
-                        transition={{duration: 0.3}}
-                    />
-                    <motion.path
-                        d="M11 25.5H29"
-                        stroke="#292D32"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        animate={isOpen ? {rotate: -45, y: -5} : {rotate: 0, y: 0}}
-                        transition={{duration: 0.3}}
-                    />
-                </svg>
-            </div>
-
-            {mounted &&
-                createPortal(
-                    <AnimatePresence>
-                        {isOpen && (
-                            <motion.div
-                                className={styles.modal}
-                                initial="hidden"
-                                animate="visible"
-                                exit="exit"
-                                variants={menuVariants}
-                            >
-                                <motion.div className={styles.modal_menu}>
-                                    <motion.div variants={itemVariants}>
-                                        <Link href="/">Главная</Link>
-                                    </motion.div>
-                                    <motion.div variants={itemVariants}>
-                                        <Link href="/about-us">О Нас</Link>
-                                    </motion.div>
-                                    <motion.div variants={itemVariants}>
-                                        <Link href="/#collection">Коллекция</Link>
-                                    </motion.div>
-                                </motion.div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>,
-                    document.body
-                )}
+            <MobileHeaderMenu
+                isOpen={isOpenMobileMenu}
+                onMenuToggle={onClickToggleMobileMenu}
+            />
+            <MenuCategories
+                isOpen={isOpenCollectionMenu}
+                categories={categories}
+                onClose={() => setIsOpenCollectionMenu(false)}
+                onMouseEnter={keepCollectionMenuOpen}
+            />
         </>
     )
 }

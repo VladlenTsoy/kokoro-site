@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useEffect, useState} from "react"
+import React, {useCallback, useEffect, useState} from "react"
 import {createPortal} from "react-dom"
 import {AnimatePresence, motion} from "framer-motion"
 import styles from "./Popover.module.css"
@@ -48,14 +48,14 @@ const Popover: React.FC<PopoverProps> = (
         }
     }, [usePortal])
 
-    const updatePosition = () => {
+    const updatePosition = useCallback(() => {
         const anchor = anchorRef.current
         if (!anchor) return
         const rect = anchor.getBoundingClientRect()
         const top = rect.bottom + offset
         const left = align === "right" ? rect.right - width : rect.left
         setPosition({top, left})
-    }
+    }, [align, anchorRef, offset, width])
 
     useEffect(() => {
         if (!open) return
@@ -67,7 +67,7 @@ const Popover: React.FC<PopoverProps> = (
             window.removeEventListener("resize", handle)
             window.removeEventListener("scroll", handle, true)
         }
-    }, [open, align, offset, width, anchorRef, updatePosition])
+    }, [open, updatePosition])
 
     const content = (
         <AnimatePresence>

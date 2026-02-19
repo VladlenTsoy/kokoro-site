@@ -1,58 +1,33 @@
+.menu_wrapper {
+    position: relative;
+}
 
 .menu {
     text-transform: uppercase;
 }
 
-.menu a {
+.menu a, .menu div {
     display: inline-block;
-    padding: 6px 24px;
+    padding: 30px 24px;
     cursor: pointer;
     transition: color .3s ease-in-out;
 }
 
-.menu a:hover {
+.menu a:hover,
+.menu .collection_trigger:hover {
     color: var(--primary-color);
 }
 
-.m_menu {
-    display: none;;
+.menu .collection_trigger {
+    color: inherit;
 }
 
 @media (max-width: 992px) {
+    .menu_wrapper {
+        display: none;
+    }
 
     .menu {
         display: none;
     }
-
-    .m_menu {
-        display: block;
-    }
-}
-
-.modal {
-    position: absolute;
-    background: white;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 99;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal_menu {
-    text-align: center;
-    display: grid;
-    gap: 25px;
-    text-transform: uppercase;
-}
-
-.modal_menu a {
-    display: block;
-    font-size: 22px;
-    font-weight: 400;
-    line-height: 28.8px;
-    padding: 1rem;
 }
