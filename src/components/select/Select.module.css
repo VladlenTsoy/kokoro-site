@@ -4,9 +4,12 @@
 }
 
 .select {
+    appearance: none;
+    border-radius: 0;
+    background: white;
+    border: 1px solid #C4C4C4;
     text-transform: uppercase;
     padding: 18px 40px 18px 24px;
-    border: 1px solid #C4C4C4;
     display: inline-flex;
     align-items: center;
     gap: .5rem;
@@ -15,6 +18,10 @@
     min-width: 100px;
     position: relative;
     height: 55px;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
 }
 
 .select svg {
@@ -29,16 +36,26 @@
     transform: rotate(180deg);
 }
 
+.select.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .dropdown {
     position: absolute;
     background: white;
     border: 1px solid #C4C4C4;
     top: calc(100% + 5px);
-    text-align: center;
+    left: 0;
+    right: 0;
     box-sizing: border-box;
+    z-index: 20;
+    overflow: hidden;
 }
 
 .dropdown .option {
+    appearance: none;
+    border: 0;
     cursor: pointer;
     padding: 18px 40px 18px 24px;
     display: inline-flex;
@@ -51,6 +68,9 @@
     width: 100%;
     gap: .5rem;
     background: white;
+    position: relative;
+    font: inherit;
+    color: inherit;
 }
 
 .dropdown .option:hover {
@@ -68,6 +88,10 @@
 .color {
     height: 20px;
     width: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
     display: inline-block;
     border-radius: 50%;
 }

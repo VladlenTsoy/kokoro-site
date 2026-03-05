@@ -29,7 +29,13 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({images}) => {
                         <div className={styles.container}>
                             {images.map((image, key) =>
                                 <div className={cn(styles.image, {[styles.active]: key === 0})} key={key}>
-                                    <Image src={image.url} alt={`image-${key}`} fill priority={key === 0} />
+                                    <Image
+                                        src={image.url}
+                                        alt={`image-${key}`}
+                                        fill
+                                        priority={key === 0}
+                                        sizes="(max-width: 992px) 100vw, (max-width: 1200px) calc(100vw - 430px), (max-width: 1400px) calc(100vw - 530px), calc(100vw - 580px)"
+                                    />
                                 </div>
                             )}
                         </div>

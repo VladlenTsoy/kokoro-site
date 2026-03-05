@@ -17,7 +17,7 @@ const CartContent = () => {
                     <CartProductItem key={item.id} item={item} />
                 ))}
             </div>
-            <div>
+            <div className={styles.sticky_sidebar}>
                 <CartTotalBlock />
             </div>
         </>

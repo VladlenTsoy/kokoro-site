@@ -14,11 +14,28 @@
 .banner .banner_image::before {
     content: "";
     display: block;
-    padding-bottom: calc(100% / 1.94);
+    padding-bottom: calc(100% / 2.5);
 }
 
-.banner .banner_image img {
+.banner .banner_image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 10;
+}
+
+.banner .banner_image img,
+.banner .banner_image .banner_video {
     width: 100%;
+}
+
+.banner .banner_image .banner_video {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
 }
 
 .banner .banner_image .banner_title {
@@ -36,6 +53,7 @@
 
 .banner .banner_image .banner_socials {
     position: absolute;
+    z-index: 30;
     left: 0;
     bottom: 10px;
     display: flex;

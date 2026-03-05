@@ -25,7 +25,7 @@ export default async function Home() {
     return (
         <main>
             <Banner title={<>FEEL YOUR<br />KOKORO</>} />
-            <ProductList title={<h2>Новая<br />коллекция</h2>} items={products} limit={PRODUCTS_LIMIT} />
+            <ProductList title={<h2>Новая<br />одежда</h2>} items={products} limit={PRODUCTS_LIMIT} />
             <ProductBanner />
             <ProductList title={<h3>Вам может<br />понравится</h3>} items={[]} limit={PRODUCTS_LIMIT} />
         </main>

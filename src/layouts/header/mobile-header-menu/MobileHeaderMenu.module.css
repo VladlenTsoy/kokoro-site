@@ -1,6 +1,6 @@
 .modal {
-    position: absolute;
-    background: white;
+    position: fixed;
+    background: #fff;
     top: 0;
     bottom: 0;
     left: 0;
@@ -9,19 +9,148 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow-y: auto;
 }
 
 .modal_menu {
     text-align: center;
+    text-transform: uppercase;
     display: grid;
     gap: 25px;
-    text-transform: uppercase;
 }
 
-.modal_menu a {
-    display: block;
+.modal_menu a,
+.menu_button {
+    display: inline-block;
     font-size: 22px;
     font-weight: 400;
     line-height: 28.8px;
+    color: #151515;
+    background: transparent;
+    border: 0;
     padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.modal_collections {
+    align-items: flex-start;
+    justify-content: stretch;
+    background: #fff;
+    padding: 78px 26px 26px;
+}
+
+.collections_view {
+    display: grid;
+    gap: 20px;
+    width: 100%;
+}
+
+.back_button {
+    width: fit-content;
+    border: 0;
+    background: transparent;
+    font-size: 15px;
+    color: #6b6b6b;
+    cursor: pointer;
+    padding: 0;
+}
+
+.categories_list {
+    display: grid;
+    gap: 28px;
+}
+
+.category_link {
+    font-size: 52px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #5a5a5a;
+}
+
+.collection_banner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 0.86;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+.collection_banner_bg {
+    object-fit: cover;
+}
+
+.collection_banner_overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 20, 34, 0.2) 0%, rgba(13, 20, 34, 0.35) 100%);
+}
+
+.collection_banner_title {
+    position: absolute;
+    z-index: 2;
+    left: 16px;
+    top: 16px;
+    right: 16px;
+    color: #fff;
+    font-family: var(--font-header), sans-serif;
+    font-size: 76px;
+    line-height: 0.86;
+}
+
+.collection_banner_tshirt {
+    position: absolute;
+    z-index: 3;
+    left: -18px;
+    right: -12px;
+    bottom: -24px;
+    height: 76%;
+}
+
+.collection_banner_tshirt_image {
+    object-fit: cover;
+    object-position: center top;
+}
+
+@media (min-width: 993px) {
+    .modal {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal_menu a,
+    .menu_button,
+    .category_link {
+        font-size: 24px;
+    }
+
+    .collection_banner_title {
+        font-size: 64px;
+    }
+}
+
+@media (max-width: 576px) {
+    .modal_collections {
+        padding: 70px 16px 16px;
+    }
+
+    .modal_menu a,
+    .menu_button {
+        font-size: 21px;
+    }
+
+    .category_link {
+        font-size: 48px;
+    }
+
+    .categories_list {
+        gap: 24px;
+    }
+
+    .collection_banner_title {
+        font-size: 58px;
+    }
 }

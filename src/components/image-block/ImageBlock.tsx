@@ -1,15 +1,15 @@
 "use client"
 
-import React, {useEffect, useState} from "react"
+import React from "react"
 import styled from "./ImageBlock.module.css"
 import NextImage from "next/image"
-import {AnimatePresence, motion} from "framer-motion"
 
 type ImageBlockBaseProps = {
     src: string
     alt: string
     priority?: boolean
     quality?: number
+    blurDataURL?: string
 }
 
 type ImageBlockFillProps = ImageBlockBaseProps & {
@@ -34,20 +34,21 @@ const ImageBlock: React.FC<ImageBlockProps> = (
         width,
         height,
         fill = false,
-        quality = 100
+        quality = 100,
+        blurDataURL
     }
 ) => {
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(false)
-
-    useEffect(() => {
-        setLoading(true)
-        setError(false)
-    }, [src])
+    if (!src) {
+        return (
+            <div className={styled.imageBlock}>
+                <div className={styled.loading}>ERROR</div>
+            </div>
+        )
+    }
 
     return (
         <div className={styled.imageBlock}>
-            <div className={styled.image} key="image">
+            <div className={styled.image}>
                 <NextImage
                     src={src}
                     alt={alt}
@@ -58,31 +59,10 @@ const ImageBlock: React.FC<ImageBlockProps> = (
                     style={{objectFit: "cover"}}
                     sizes="(max-width: 768px) 100%"
                     quality={quality}
-                    onLoad={() => setLoading(false)}
-                    onError={() => {
-                        setError(true)
-                        setLoading(false)
-                    }}
+                    placeholder="blur"
+                    blurDataURL={blurDataURL || "data:image/gif;base64,R0lGODlhAQABAPAAAN7e3gAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="}
                 />
             </div>
-            <AnimatePresence>
-                {loading && (
-                    <motion.div
-                        className={styled.loading}
-                        initial={{opacity: 1}}
-                        animate={{opacity: 1}}
-                        exit={{opacity: 0}}
-                        transition={{duration: 0.25, ease: "easeOut"}}
-                    >
-                        Loading...
-                    </motion.div>
-                )}
-            </AnimatePresence>
-            {error && (
-                <div className={styled.loading} key="image">
-                    ERROR
-                </div>
-            )}
         </div>
     )
 }

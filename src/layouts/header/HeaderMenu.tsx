@@ -73,19 +73,21 @@ const HeaderMenu: React.FC<Props> = ({categories}) => {
                         onMouseLeave={closeCollectionMenu}
                         onMouseEnter={openCollectionMenu}
                     >
-                        Коллекция
+                        Одежда
                     </Link>
                 </div>
             </div>
             <MobileHeaderMenu
                 isOpen={isOpenMobileMenu}
                 onMenuToggle={onClickToggleMobileMenu}
+                categories={categories}
             />
             <MenuCategories
                 isOpen={isOpenCollectionMenu}
                 categories={categories}
                 onClose={() => setIsOpenCollectionMenu(false)}
                 onMouseEnter={keepCollectionMenuOpen}
+                onMouseLeave={closeCollectionMenu}
             />
         </>
     )

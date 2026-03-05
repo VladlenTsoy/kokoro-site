@@ -1,23 +1,135 @@
 .banner {
+    box-sizing: border-box;
+    height: calc(100dvh - 74px);
     padding: 0 12px;
-    transition: padding .3s ease-in-out;
+    width: 100%;
 }
 
 .banner .banner_image {
+    background: #000;
     border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     overflow: hidden;
+    padding: 42px 0 0;
     position: relative;
     width: 100%;
-    transition: border-radius .3s ease-in-out;
-    background: black;
 }
 
-.banner .banner_image::before {
-    content: "";
-    display: block;
-    padding-bottom: calc(100% / 1.94);
+.content {
+    color: #fff;
+    margin: 0 auto 28px;
+    max-width: 700px;
+    padding: 0 24px;
+    position: relative;
+    text-align: center;
+    z-index: 2;
 }
 
-.banner .banner_image img {
+.title {
+    font-family: var(--font-header), sans-serif;
+    font-size: 86px;
+    line-height: 0.85;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+.text {
+    color: #FFFFFF;
+    font-weight: 400;
+}
+
+.text:not(:last-child) {
+    margin-bottom: 14px;
+}
+
+.image_wrap {
+    flex: 1;
+    margin: 0 auto;
+    min-height: 0;
+    position: relative;
     width: 100%;
+}
+
+.video {
+    height: 100%;
+    left: 0;
+    object-fit: cover;
+    object-position: center bottom;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.fade_to_image {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 140px;
+    background: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0) 100%);
+    z-index: 2;
+}
+
+.banner_socials {
+    bottom: 10px;
+    display: flex;
+    left: 0;
+    position: absolute;
+    z-index: 4;
+}
+
+.image_wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    z-index: 1;
+}
+
+@media (max-width: 1200px) {
+    .title {
+        font-size: 64px;
+    }
+}
+
+@media (max-width: 992px) {
+    .banner {
+        height: calc(100dvh - 68px);
+        padding: 0;
+    }
+
+    .banner .banner_image {
+        border-radius: 0;
+        padding: 30px 0 0;
+    }
+
+    .title {
+        font-size: 48px;
+        margin-bottom: 14px;
+    }
+
+    .content {
+        margin-bottom: 18px;
+        padding: 0 16px;
+    }
+
+    .banner_socials {
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .title {
+        font-size: 42px;
+    }
+
+    .fade_to_image {
+        height: 90px;
+    }
 }

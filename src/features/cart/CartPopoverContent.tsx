@@ -9,6 +9,7 @@ import CloseIcon from "@/components/icons/CloseIcon"
 import {useRouter} from "next/navigation"
 import Image from "next/image"
 import Tag from "@/components/tag/Tag"
+import {calculateDiscountedTotal} from "@/utils/calculateDiscountedTotal"
 
 interface Props {
     onClose: () => void
@@ -21,6 +22,11 @@ const CartPopoverContent: React.FC<Props> = ({onClose}) => {
     const lastAddedItemId = useSelector(selectCartLastAddedItemId)
     const router = useRouter()
     const previewItem = items.find(item => item.id === lastAddedItemId) || items[items.length - 1]
+    const previewHasDiscount = !!previewItem && typeof previewItem.discountPercent === "number" && previewItem.discountPercent > 0
+    const previewUnitPrice = previewItem?.price ?? 0
+    const previewDiscountedUnitPrice = previewHasDiscount
+        ? calculateDiscountedTotal(previewUnitPrice, previewItem.discountPercent)
+        : previewUnitPrice
 
     const onClickHandler = () => {
         router.push(`/cart`)
@@ -49,8 +55,11 @@ const CartPopoverContent: React.FC<Props> = ({onClose}) => {
                             {previewItem.sizeTitle && <Tag>{previewItem.sizeTitle}</Tag>}
                             {previewItem.colorTitle && <Tag>{previewItem.colorTitle}</Tag>}
                         </div>
+                        {previewHasDiscount && (
+                            <div className={styles.preview_old_price}>{formatPrice(previewUnitPrice)}сум</div>
+                        )}
                         <div className={styles.preview_price}>
-                            {formatPrice(previewItem.price * previewItem.qty)}сум
+                            {formatPrice(previewDiscountedUnitPrice)}сум
                         </div>
                     </div>
                 )}

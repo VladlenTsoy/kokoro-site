@@ -14,17 +14,17 @@ const Footer = () => {
                             Для клиентов
                         </li>
                         <li className={styles.item}>
-                            <Link href="/" passHref>
+                            <Link href="/delivery" passHref>
                                 Доставка
                             </Link>
                         </li>
                         <li className={styles.item}>
-                            <Link href="/" passHref>
+                            <Link href="/returns" passHref>
                                 Возврат
                             </Link>
                         </li>
                         <li className={styles.item}>
-                            <Link href="/" passHref>
+                            <Link href="/packaging" passHref>
                                 Упаковка
                             </Link>
                         </li>
@@ -34,17 +34,17 @@ const Footer = () => {
                             Информация
                         </li>
                         <li className={styles.item}>
-                            <Link href="/" passHref>
+                            <Link href="/public-offer" passHref>
                                 Публичная оферта
                             </Link>
                         </li>
                         <li className={styles.item}>
-                            <Link href="/" passHref>
+                            <Link href="/user-agreement" passHref>
                                 Пользовательское соглашение
                             </Link>
                         </li>
                         <li className={styles.item}>
-                            <Link href="/" passHref>
+                            <Link href="/privacy-policy" passHref>
                                 Политика конфиденциальности
                             </Link>
                         </li>

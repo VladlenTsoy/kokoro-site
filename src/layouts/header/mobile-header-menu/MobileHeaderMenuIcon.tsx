@@ -24,6 +24,7 @@ const MobileHeaderMenuIcon:React.FC<Props> = ({isOpen, onClick}) => {
                     stroke="#292D32"
                     strokeWidth="1.5"
                     strokeLinecap="round"
+                    initial={{opacity: 1}}
                     animate={isOpen ? {opacity: 0} : {opacity: 1}}
                     transition={{duration: 0.3}}
                 />

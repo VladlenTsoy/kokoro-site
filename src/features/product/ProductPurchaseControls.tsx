@@ -18,6 +18,7 @@ interface ProductPurchaseControlsProps {
     sizeOptions: SelectOption[]
     colorOptions: SelectOption[]
     colorTitle?: string
+    discountPercent?: number
     children?: React.ReactNode
 }
 
@@ -30,6 +31,7 @@ const ProductPurchaseControls: React.FC<ProductPurchaseControlsProps> = (
         sizeOptions,
         colorOptions,
         colorTitle,
+        discountPercent,
         children
     }
 ) => {
@@ -49,7 +51,8 @@ const ProductPurchaseControls: React.FC<ProductPurchaseControlsProps> = (
             title: getTextValue(title),
             image,
             sizeTitle: getTextValue(selectedSize.title),
-            colorTitle: getTextValue(colorTitle)
+            colorTitle: getTextValue(colorTitle),
+            discountPercent
         }))
         window.scrollTo({top: 0, behavior: "smooth"})
     }

@@ -1,9 +1,8 @@
 import React from "react"
+import type {Metadata} from "next"
 import {notFound} from "next/navigation"
 import styles from "./page.module.css"
-import Breadcrumb from "@/components/breadcrumb/Breadcrumb"
 import ImageGallery from "@/components/image-gallery/ImageGallery"
-import Tabs from "@/components/tabs/Tabs"
 import Container from "@/layouts/container/Container"
 import ProductPrice from "@/components/product-price/ProductPrice"
 import type {ProductVariant} from "@/features/product-variants/productVariantsApi"
@@ -11,11 +10,24 @@ import getTextValue from "@/utils/getTextValue"
 import MeasurementsTable from "@/features/product/MeasurementsTable"
 import {mapColorOptions, mapImages, mapSizeOptions} from "@/features/product/productViewModel"
 import ProductPurchaseControls from "@/features/product/ProductPurchaseControls"
+import Breadcrumb from "@/components/breadcrumb/Breadcrumb"
+import {API_BASE_URL} from "@/utils/apiConfig"
+import ProductDetailsCollapse from "@/features/product/ProductDetailsCollapse"
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+const PRODUCT_REVALIDATE_SECONDS = 10
+
+const stripHtml = (value: string) => value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
+
+const resolveProductDescription = (product: ProductVariant) => {
+    const firstProperty = product.product?.properties?.[0]?.description
+    if (firstProperty) return stripHtml(getTextValue(firstProperty))
+    return `${getTextValue(product.title)} от KOKORO`
+}
 
 async function getProductVariant(id: string): Promise<ProductVariant> {
-    const res = await fetch(`http://localhost:3000/api/product/variants/${id}`, {
-        next: {revalidate: 10}
-        // cache: "no-store"
+    const res = await fetch(`${API_BASE_URL}/product/variants/${id}`, {
+        next: {revalidate: PRODUCT_REVALIDATE_SECONDS}
     })
 
     if (!res.ok) notFound()
@@ -24,6 +36,55 @@ async function getProductVariant(id: string): Promise<ProductVariant> {
     if (!data) notFound()
 
     return data
+}
+
+async function getProductVariantForMetadata(id: string): Promise<ProductVariant | null> {
+    const res = await fetch(`${API_BASE_URL}/product/variants/${id}`, {
+        next: {revalidate: PRODUCT_REVALIDATE_SECONDS}
+    })
+
+    if (!res.ok) return null
+
+    const data = (await res.json()) as ProductVariant | null
+    if (!data) return null
+
+    return data
+}
+
+export async function generateMetadata({params}: {params: {id: string}}): Promise<Metadata> {
+    const product = await getProductVariantForMetadata(params.id)
+    if (!product) {
+        return {
+            title: "Товар не найден | KOKORO",
+            robots: {index: false, follow: false}
+        }
+    }
+
+    const title = `${getTextValue(product.title)} | KOKORO`
+    const description = resolveProductDescription(product)
+    const imageUrl = product.images?.[0]?.path
+    const canonical = `${SITE_URL}/product/${params.id}`
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical
+        },
+        openGraph: {
+            title,
+            description,
+            type: "website",
+            url: canonical,
+            images: imageUrl ? [{url: imageUrl}] : undefined
+        },
+        twitter: {
+            card: imageUrl ? "summary_large_image" : "summary",
+            title,
+            description,
+            images: imageUrl ? [imageUrl] : undefined
+        }
+    }
 }
 
 const Page = async ({params}: {params: {id: string}}) => {
@@ -49,7 +110,10 @@ const Page = async ({params}: {params: {id: string}}) => {
 
     return (
         <Container>
-            <Breadcrumb />
+            <Breadcrumb items={[
+                {href: "/collections", label: "Одежда"},
+                {label: getTextValue(product.title), isCurrent: true}
+            ]} />
             <div className={styles.container}>
                 <ImageGallery images={images} />
                 <div className={styles.details}>
@@ -74,9 +138,10 @@ const Page = async ({params}: {params: {id: string}}) => {
                             sizeOptions={sizeOptions}
                             colorOptions={colorOptions}
                             colorTitle={product.color?.title}
+                            discountPercent={product?.discount?.discountPercent ? Number(product.discount.discountPercent) : undefined}
                         >
                             <div className={styles.tabs}>
-                                <Tabs tabs={tabs} />
+                                <ProductDetailsCollapse items={tabs} />
                             </div>
                         </ProductPurchaseControls>
                     </div>
@@ -88,4 +153,4 @@ const Page = async ({params}: {params: {id: string}}) => {
 
 export default Page
 
-export const revalidate = 10
+export const revalidate = PRODUCT_REVALIDATE_SECONDS

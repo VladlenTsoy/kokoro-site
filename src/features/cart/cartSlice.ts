@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit"
+import {calculateDiscountedTotal} from "@/utils/calculateDiscountedTotal"
 
 export interface CartItem {
     id: string
@@ -10,6 +11,7 @@ export interface CartItem {
     image: string
     sizeTitle?: string
     colorTitle?: string
+    discountPercent?: number
 }
 
 interface CartState {
@@ -36,6 +38,7 @@ interface AddItemPayload {
     image: string
     sizeTitle?: string
     colorTitle?: string
+    discountPercent?: number
 }
 
 interface UpdateQtyPayload {
@@ -56,7 +59,8 @@ const cartSlice = createSlice({
                 title,
                 image,
                 sizeTitle,
-                colorTitle
+                colorTitle,
+                discountPercent
             } = action.payload
             const id = buildCartItemId(productVariantId, sizeId)
             const existing = state.items.find(item => item.id === id)
@@ -77,7 +81,8 @@ const cartSlice = createSlice({
                 title,
                 image,
                 sizeTitle,
-                colorTitle
+                colorTitle,
+                discountPercent
             })
             state.lastAddedAt = Date.now()
             state.lastAddedItemId = id
@@ -109,7 +114,11 @@ export const cartReducer = cartSlice.reducer
 
 export const selectCartItems = (state: {cart: CartState}) => state.cart.items
 export const selectCartTotal = (state: {cart: CartState}) =>
-    state.cart.items.reduce((sum, item) => sum + item.price * item.qty, 0)
+    state.cart.items.reduce((sum, item) => {
+        const rowTotal = item.price * item.qty
+        const hasDiscount = typeof item.discountPercent === "number" && item.discountPercent > 0
+        return sum + (hasDiscount ? calculateDiscountedTotal(rowTotal, item.discountPercent) : rowTotal)
+    }, 0)
 export const selectCartCount = (state: {cart: CartState}) =>
     state.cart.items.reduce((sum, item) => sum + item.qty, 0)
 export const selectCartLastAddedAt = (state: {cart: CartState}) => state.cart.lastAddedAt

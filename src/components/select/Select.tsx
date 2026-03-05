@@ -1,12 +1,12 @@
 "use client"
 
-import React, {useEffect, useRef, useState} from "react"
+import React, {useEffect, useId, useMemo, useRef, useState} from "react"
 import styles from "./Select.module.css"
 import cn from "classnames"
 import {motion, AnimatePresence} from "framer-motion"
 import getTextValue from "@/utils/getTextValue"
 
-interface OptionProps {
+export interface OptionProps {
     color?: string
     title: string
     value: string | number
@@ -18,24 +18,41 @@ interface SelectProps {
 }
 
 const Select: React.FC<SelectProps> = ({options, onChange}) => {
+    const selectId = useId()
+    const wrapperRef = useRef<HTMLDivElement>(null)
     const [visible, setVisible] = useState(false)
-    const [selected, setSelected] = useState<OptionProps>(options[0])
-    const selectRef = useRef<HTMLDivElement>(null)
-    const dropdownRef = useRef<HTMLDivElement>(null)
+    const [activeIndex, setActiveIndex] = useState(0)
+
+    const hasOptions = options.length > 0
+    const selected = useMemo(() => options[activeIndex], [activeIndex, options])
 
     const onClickHandler = () => {
+        if (!hasOptions) return
         setVisible(prevState => !prevState)
     }
 
-    const onSelectHandler = (option: OptionProps) => {
-        setSelected(option)
+    const onSelectHandler = (option: OptionProps, index: number) => {
+        setActiveIndex(index)
         setVisible(false)
         onChange?.(option)
     }
 
     useEffect(() => {
+        if (!hasOptions) {
+            setVisible(false)
+            setActiveIndex(0)
+            return
+        }
+
+        const safeIndex = Math.min(activeIndex, options.length - 1)
+        if (safeIndex !== activeIndex) {
+            setActiveIndex(safeIndex)
+        }
+    }, [activeIndex, hasOptions, options.length])
+
+    useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node))
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node))
                 setVisible(false)
         }
 
@@ -44,24 +61,69 @@ const Select: React.FC<SelectProps> = ({options, onChange}) => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside)
         }
-    }, [dropdownRef])
+    }, [])
+
+    useEffect(() => {
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (!visible) return
+            if (event.key === "Escape") {
+                setVisible(false)
+            }
+        }
+
+        document.addEventListener("keydown", onKeyDown)
+        return () => {
+            document.removeEventListener("keydown", onKeyDown)
+        }
+    }, [visible])
+
+    const onTriggerKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+        if (!hasOptions) return
+
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+            event.preventDefault()
+            if (!visible) {
+                setVisible(true)
+                return
+            }
+            const delta = event.key === "ArrowDown" ? 1 : -1
+            const nextIndex = (activeIndex + delta + options.length) % options.length
+            onSelectHandler(options[nextIndex], nextIndex)
+        }
+
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault()
+            setVisible(prev => !prev)
+        }
+    }
 
     return (
-        <div className={styles.wrapper}>
-            <div ref={selectRef} className={cn(styles.select, {[styles.active]: visible})} onClick={onClickHandler}>
-                {selected?.color && <div className={styles.color} style={{background: selected.color}} />}
-                <span>{getTextValue(selected?.title)}</span>
+        <div className={styles.wrapper} ref={wrapperRef}>
+            <button
+                type="button"
+                className={cn(styles.select, {[styles.active]: visible, [styles.disabled]: !hasOptions})}
+                onClick={onClickHandler}
+                onKeyDown={onTriggerKeyDown}
+                aria-haspopup="listbox"
+                aria-expanded={visible}
+                aria-controls={`${selectId}-listbox`}
+                disabled={!hasOptions}
+            >
+                {selected?.color && <span className={styles.color} style={{background: selected.color}} />}
+                <span>{getTextValue(selected?.title || "Нет вариантов")}</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M13.2802 5.96667L8.93355 10.3133C8.42021 10.8267 7.58021 10.8267 7.06688 10.3133L2.72021 5.96667"
                         stroke="#151515" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round"
                         strokeLinejoin="round" />
                 </svg>
-            </div>
+            </button>
             <AnimatePresence>
                 {visible &&
                     <motion.div
-                        ref={dropdownRef}
+                        id={`${selectId}-listbox`}
+                        role="listbox"
+                        aria-activedescendant={`${selectId}-option-${selected?.value ?? "none"}`}
                         className={styles.dropdown}
                         initial={{opacity: 0, y: -10}}
                         animate={{opacity: 1, y: 0}}
@@ -69,12 +131,19 @@ const Select: React.FC<SelectProps> = ({options, onChange}) => {
                         transition={{duration: 0.1}}
                     >
                         {options.map((option, key) =>
-                            <div className={cn(styles.option, "option")} key={key}
-                                 onClick={() => onSelectHandler(option)}>
+                            <button
+                                id={`${selectId}-option-${option.value}`}
+                                role="option"
+                                aria-selected={option.value === selected?.value}
+                                type="button"
+                                className={cn(styles.option, "option")}
+                                key={option.value}
+                                onClick={() => onSelectHandler(option, key)}
+                            >
                                 {option?.color && <div className={styles.color} style={{background: option.color}} />}
                                 {getTextValue(option.title)}
                                 {
-                                    option.value === selected.value &&
+                                    option.value === selected?.value &&
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -84,7 +153,7 @@ const Select: React.FC<SelectProps> = ({options, onChange}) => {
                                               strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 }
-                            </div>
+                            </button>
                         )}
                     </motion.div>
                 }

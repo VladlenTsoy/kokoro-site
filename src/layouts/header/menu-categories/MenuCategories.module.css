@@ -54,10 +54,70 @@
 
 
 .collection_banner .banner {
+    background: #0f2538;
+    border-radius: 8px;
+    display: block;
     height: 100%;
+    min-height: 290px;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
     width: 100%;
-    background: green;
-    border-radius: 5px;
+}
+
+.banner_bg {
+    object-fit: cover;
+    object-position: center;
+}
+
+.banner_overlay {
+    background: linear-gradient(90deg, rgba(8, 22, 36, 0.92) 0%, rgba(8, 22, 36, 0.34) 55%, rgba(8, 22, 36, 0.08) 100%);
+    inset: 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.banner_text {
+    color: #fff;
+    left: 20px;
+    max-width: 62%;
+    position: absolute;
+    top: 16px;
+    z-index: 2;
+}
+
+.banner_title {
+    font-family: var(--font-header), sans-serif;
+    font-size: 52px;
+    line-height: 0.83;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.banner_description {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 17px;
+    line-height: 1.4;
+}
+
+@media (max-width: 1400px) {
+    .banner_title {
+        font-size: 44px;
+    }
+
+    .banner_description {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .banner_title {
+        font-size: 36px;
+    }
+
+    .banner_description {
+        font-size: 14px;
+    }
 }
 
 
