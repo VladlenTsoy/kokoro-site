@@ -1,0 +1,53 @@
+.page {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    width: 100%;
+    padding: 24px 2rem 48px;
+}
+
+.title {
+    text-transform: uppercase;
+    font-size: 42px;
+    line-height: 1;
+    margin-bottom: 24px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+}
+
+.sidebar {
+    position: sticky;
+    top: 90px;
+    align-self: start;
+}
+
+.content {
+    min-width: 0;
+}
+
+.products_title {
+    text-transform: uppercase;
+    font-size: 30px;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 992px) {
+    .title {
+        font-size: 28px;
+    }
+
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: static;
+    }
+
+    .products_title {
+        font-size: 24px;
+    }
+}
