@@ -2,6 +2,7 @@ import React from "react"
 import styles from "./Breadcrumb.module.css"
 import cn from "classnames"
 import Link from "next/link"
+
 export interface BreadcrumbItem {
     href?: string
     label: string
@@ -23,10 +24,10 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({items}) => {
                 </Link>
             </div>
             {items.map(item => (
-                <React.Fragment key={item.href}>
+                <React.Fragment key={item.href ?? item.label}>
                     <div className={styles.splash}>/</div>
                     <div className={cn(styles.item, {[styles.current]: item.isCurrent})}>
-                        {item.isCurrent ? (
+                        {item.isCurrent || !item.href ? (
                             item.label
                         ) : (
                             <Link href={item.href}>{item.label}</Link>

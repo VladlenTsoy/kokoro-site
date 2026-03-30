@@ -1,5 +1,6 @@
 import React from "react"
 import styles from "./page.module.css"
+import Image from "next/image"
 
 const Page = () => {
     return (
@@ -7,7 +8,7 @@ const Page = () => {
             <div className={styles.container}>
                 <div className={styles.soon}>Скоро</div>
                 <div className={styles.stack}>
-                    <img src="./images/logo_white.svg" alt="KOKORO" />
+                    <Image src="/images/logo_white.svg" alt="KOKORO" width={180} height={42} priority />
                 </div>
                 <div className={styles.right}>
                     <a href="https://www.instagram.com/kokoro.mode">Instagram</a>
