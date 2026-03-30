@@ -116,8 +116,8 @@ export const selectCartItems = (state: {cart: CartState}) => state.cart.items
 export const selectCartTotal = (state: {cart: CartState}) =>
     state.cart.items.reduce((sum, item) => {
         const rowTotal = item.price * item.qty
-        const hasDiscount = typeof item.discountPercent === "number" && item.discountPercent > 0
-        return sum + (hasDiscount ? calculateDiscountedTotal(rowTotal, item.discountPercent) : rowTotal)
+        const discountPercent = typeof item.discountPercent === "number" ? item.discountPercent : 0
+        return sum + (discountPercent > 0 ? calculateDiscountedTotal(rowTotal, discountPercent) : rowTotal)
     }, 0)
 export const selectCartCount = (state: {cart: CartState}) =>
     state.cart.items.reduce((sum, item) => sum + item.qty, 0)

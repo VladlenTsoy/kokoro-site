@@ -31,20 +31,23 @@ const CartTotalBlock: React.FC<CartTotalBlockProps> = (
         <div className={styles.container}>
             <h5 className={styles.title}>Ваша корзина:</h5>
             <div className={styles.product_list}>
-                {items.map(item => (
-                    <div className={styles.product_item} key={item.id}>
-                        <div className={styles.label}>{item.title}</div>
-                        <div className={styles.price}>
-                            <span>{item.qty}</span>
-                            <span>x</span>
-                            {formatPrice(
-                                typeof item.discountPercent === "number" && item.discountPercent > 0
-                                    ? calculateDiscountedTotal(item.price, item.discountPercent)
-                                    : item.price
-                            )}cум
+                {items.map(item => {
+                    const discountPercent = typeof item.discountPercent === "number" ? item.discountPercent : 0
+                    const unitPrice = discountPercent > 0
+                        ? calculateDiscountedTotal(item.price, discountPercent)
+                        : item.price
+
+                    return (
+                        <div className={styles.product_item} key={item.id}>
+                            <div className={styles.label}>{item.title}</div>
+                            <div className={styles.price}>
+                                <span>{item.qty}</span>
+                                <span>x</span>
+                                {formatPrice(unitPrice)}cум
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    )
+                })}
             </div>
             <div className={styles.promo_code}>
                 <Input placeholder="Введите промокод..." style={{paddingLeft: 0, paddingRight: 0}} />

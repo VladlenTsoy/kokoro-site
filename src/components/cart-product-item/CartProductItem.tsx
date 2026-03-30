@@ -19,9 +19,10 @@ interface CartProductItemProps {
 
 const CartProductItem: React.FC<CartProductItemProps> = ({item}) => {
     const dispatch = useDispatch()
-    const hasDiscount = typeof item.discountPercent === "number" && item.discountPercent > 0
+    const discountPercent = typeof item.discountPercent === "number" ? item.discountPercent : 0
+    const hasDiscount = discountPercent > 0
     const totalPrice = item.price * item.qty
-    const discountedTotalPrice = hasDiscount ? calculateDiscountedTotal(totalPrice, item.discountPercent) : totalPrice
+    const discountedTotalPrice = hasDiscount ? calculateDiscountedTotal(totalPrice, discountPercent) : totalPrice
 
     return (
         <div className={styles.product_item}>

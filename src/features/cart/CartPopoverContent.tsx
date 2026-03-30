@@ -22,10 +22,13 @@ const CartPopoverContent: React.FC<Props> = ({onClose}) => {
     const lastAddedItemId = useSelector(selectCartLastAddedItemId)
     const router = useRouter()
     const previewItem = items.find(item => item.id === lastAddedItemId) || items[items.length - 1]
-    const previewHasDiscount = !!previewItem && typeof previewItem.discountPercent === "number" && previewItem.discountPercent > 0
+    const previewDiscountPercent = previewItem && typeof previewItem.discountPercent === "number"
+        ? previewItem.discountPercent
+        : 0
+    const previewHasDiscount = previewDiscountPercent > 0
     const previewUnitPrice = previewItem?.price ?? 0
     const previewDiscountedUnitPrice = previewHasDiscount
-        ? calculateDiscountedTotal(previewUnitPrice, previewItem.discountPercent)
+        ? calculateDiscountedTotal(previewUnitPrice, previewDiscountPercent)
         : previewUnitPrice
 
     const onClickHandler = () => {
