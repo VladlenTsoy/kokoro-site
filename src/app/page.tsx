@@ -3,11 +3,12 @@ import Banner from "@/components/banner/Banner"
 import ProductList from "@/features/product/ProductList"
 import ProductBanner from "@/features/product-banner/ProductBanner"
 import type {ProductVariant, ProductVariantsResponse} from "@/features/product-variants/productVariantsApi"
+import {API_BASE_URL} from "@/utils/siteConfig"
 
 const PRODUCTS_LIMIT = 8
 
 async function getProductVariants(limit: number): Promise<ProductVariant[]> {
-    const res = await fetch(`http://localhost:3000/api/product/variants?pageSize=${limit}&sortOrder=desc`, {
+    const res = await fetch(`${API_BASE_URL}/product/variants?pageSize=${limit}&sortOrder=desc`, {
         cache: "no-store"
     })
 

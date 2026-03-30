@@ -13,8 +13,7 @@ import ProductPurchaseControls from "@/features/product/ProductPurchaseControls"
 import Breadcrumb from "@/components/breadcrumb/Breadcrumb"
 import {API_BASE_URL} from "@/utils/apiConfig"
 import ProductDetailsCollapse from "@/features/product/ProductDetailsCollapse"
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+import {SITE_URL} from "@/utils/siteConfig"
 const PRODUCT_REVALIDATE_SECONDS = 10
 
 const stripHtml = (value: string) => value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()

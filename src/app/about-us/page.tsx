@@ -1,8 +1,7 @@
 import React from "react"
 import type {Metadata} from "next"
 import AboutUsContent from "@/app/about-us/AboutUsContent"
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+import {SITE_URL} from "@/utils/siteConfig"
 
 export const metadata: Metadata = {
     title: "О нас | KOKORO",

@@ -1,4 +1,5 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
+import {API_BASE_URL} from "@/utils/siteConfig"
 
 export interface ProductVariantColor {
     id: number
@@ -101,7 +102,7 @@ export interface ProductVariantsQueryParams {
 export const productVariantsApi = createApi({
     reducerPath: "productVariantsApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3000/api"
+        baseUrl: API_BASE_URL
     }),
     tagTypes: ["ProductVariant"],
     endpoints: builder => ({

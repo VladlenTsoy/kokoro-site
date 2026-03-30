@@ -1,8 +1,7 @@
 import React from "react"
 import type {Metadata} from "next"
 import LegalPage from "@/features/legal/LegalPage"
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+import {SITE_URL} from "@/utils/siteConfig"
 
 export const metadata: Metadata = {
     title: "Возврат | KOKORO",
