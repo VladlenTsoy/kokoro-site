@@ -29,6 +29,13 @@
     line-height: 1.35;
 }
 
+.error_message {
+    margin-top: 14px;
+    color: #d92d20;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
 .actions {
     margin-top: 2rem;
 }

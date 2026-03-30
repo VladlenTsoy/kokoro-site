@@ -48,3 +48,9 @@
     font-size: 20px;
     font-weight: 700;
 }
+
+.checkout_hint {
+    margin: -30px 0 18px;
+    font-size: 13px;
+    color: var(--secondary-color);
+}

@@ -8,16 +8,20 @@ import {API_BASE_URL} from "@/utils/siteConfig"
 const PRODUCTS_LIMIT = 8
 
 async function getProductVariants(limit: number): Promise<ProductVariant[]> {
-    const res = await fetch(`${API_BASE_URL}/product/variants?pageSize=${limit}&sortOrder=desc`, {
-        cache: "no-store"
-    })
+    try {
+        const res = await fetch(`${API_BASE_URL}/product/variants?pageSize=${limit}&sortOrder=desc`, {
+            cache: "no-store"
+        })
 
-    if (!res.ok) {
-        throw new Error("Failed to load product variants")
+        if (!res.ok) {
+            return []
+        }
+
+        const data = (await res.json()) as ProductVariantsResponse
+        return Array.isArray(data) ? data : data.items || []
+    } catch {
+        return []
     }
-
-    const data = (await res.json()) as ProductVariantsResponse
-    return Array.isArray(data) ? data : data.items || []
 }
 
 export default async function Home() {

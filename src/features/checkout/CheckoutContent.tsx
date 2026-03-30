@@ -1,10 +1,14 @@
 "use client"
 
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import styles from "./CheckoutContent.module.css"
 import Input from "@/components/input/Input"
 import CartTotalBlock from "@/components/cart-total-block/CartTotalBlock"
 import CheckoutMapAddress from "@/components/checkout-map-address/CheckoutMapAddress"
+import {API_BASE_URL} from "@/utils/apiConfig"
+import {useDispatch, useSelector} from "react-redux"
+import {clearCart, selectCartItems} from "@/features/cart/cartSlice"
+import {useRouter} from "next/navigation"
 
 const getUzbekistanLocalDigits = (value: string) => {
     const digits = value.replace(/\D/g, "")
@@ -45,13 +49,29 @@ const formatUzbekistanPhone = (local: string) => {
 const isUzbekistanPhoneValid = (local: string) => local.length === 9
 
 const CheckoutContent = () => {
+    const router = useRouter()
+    const dispatch = useDispatch()
+    const cartItems = useSelector(selectCartItems)
     const [name, setName] = useState("")
     const [phoneLocal, setPhoneLocal] = useState("")
     const [addressTitle, setAddressTitle] = useState("")
+    const [addressDescription, setAddressDescription] = useState("")
+    const [addressLocation, setAddressLocation] = useState<{lat: number; lng: number} | null>(null)
     const [isPhoneFocused, setIsPhoneFocused] = useState(false)
     const [nameError, setNameError] = useState("")
     const [phoneError, setPhoneError] = useState("")
     const [addressError, setAddressError] = useState("")
+    const [requestError, setRequestError] = useState("")
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [addressResetToken, setAddressResetToken] = useState(0)
+    const [isRedirectingAfterCreate, setIsRedirectingAfterCreate] = useState(false)
+
+    useEffect(() => {
+        if (isSubmitting || isRedirectingAfterCreate) return
+        if (cartItems.length === 0) {
+            router.replace("/cart")
+        }
+    }, [cartItems.length, isSubmitting, isRedirectingAfterCreate, router])
 
     const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value)
@@ -87,7 +107,7 @@ const CheckoutContent = () => {
     }
 
     const validateAddress = () => {
-        if (!addressTitle.trim()) {
+        if (!addressTitle.trim() || !addressLocation) {
             setAddressError("Выберите адрес доставки")
             return false
         }
@@ -102,20 +122,92 @@ const CheckoutContent = () => {
         return nameValid && phoneValid && addressValid
     }
 
-    const submitCheckout = () => {
-        if (!validateForm()) return
+    const submitCheckout = async () => {
+        if (isSubmitting) return
+        setRequestError("")
 
-        // TODO: replace with API request when backend endpoint is ready
-        console.log("Checkout form submit (stub)", {
-            name: name.trim(),
-            phone: `+998${phoneLocal}`,
-            address: addressTitle
-        })
+        if (cartItems.length === 0) {
+            setRequestError("Корзина пуста. Добавьте товары перед оформлением заказа.")
+            return
+        }
+        if (!validateForm()) return
+        if (!addressLocation) return
+
+        const payload = {
+            client: {
+                name: name.trim(),
+                phone: `+998${phoneLocal}`
+            },
+            address: {
+                address: addressDescription
+                    ? `${addressTitle}, ${addressDescription}`
+                    : addressTitle,
+                location: {
+                    lat: addressLocation.lat,
+                    lng: addressLocation.lng
+                }
+            },
+            items: cartItems.map(item => ({
+                productVariantId: item.productVariantId,
+                qty: item.qty
+            }))
+        }
+
+        setIsSubmitting(true)
+        try {
+            const response = await fetch(`${API_BASE_URL}/client/orders`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+
+            if (!response.ok) {
+                let responseError = `Не удалось оформить заказ. Код ошибки: ${response.status}`
+
+                try {
+                    const errorData = await response.json()
+                    if (typeof errorData?.message === "string" && errorData.message.trim()) {
+                        responseError = errorData.message
+                    }
+                } catch {
+                    // ignore parse error and fallback to default message
+                }
+
+                setRequestError(responseError)
+                return
+            }
+
+            const responseData = await response.json().catch(() => null)
+            const normalizedOrderId = typeof responseData?.id === "number"
+                ? responseData.id
+                : (typeof responseData?.order?.id === "number" ? responseData.order.id : null)
+
+            if (normalizedOrderId === null) {
+                setRequestError("Заказ создан, но не удалось получить его номер. Попробуйте обновить страницу.")
+                return
+            }
+
+            setIsRedirectingAfterCreate(true)
+            dispatch(clearCart())
+            setName("")
+            setPhoneLocal("")
+            setAddressTitle("")
+            setAddressDescription("")
+            setAddressLocation(null)
+            setAddressResetToken(prev => prev + 1)
+            router.push(`/orders/${normalizedOrderId}?success=1`)
+        } catch {
+            setRequestError("Сервис временно недоступен. Попробуйте ещё раз.")
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        submitCheckout()
+        void submitCheckout()
     }
 
     const phoneValue = isPhoneFocused || phoneLocal.length > 0
@@ -157,18 +249,29 @@ const CheckoutContent = () => {
 
                 <h4 className={styles.form_title}>Доставка</h4>
                 <CheckoutMapAddress
+                    key={addressResetToken}
                     showError={!!addressError}
                     onAddressChange={payload => {
                         setAddressTitle(payload.title)
+                        setAddressDescription(payload.description)
+                        setAddressLocation(payload.location)
                         if (addressError) {
                             setAddressError("")
                         }
                     }}
                 />
+
+                {requestError && <div className={styles.error_message}>{requestError}</div>}
             </form>
 
             <div className={styles.sticky_sidebar}>
-                <CartTotalBlock checkoutButtonText="Оформить заказ" onCheckoutClick={submitCheckout} />
+                <CartTotalBlock
+                    checkoutButtonText={isSubmitting ? "Оформляем..." : "Оформить заказ"}
+                    onCheckoutClick={() => {
+                        void submitCheckout()
+                    }}
+                    disableCheckoutIfEmpty={false}
+                />
             </div>
         </div>
     )

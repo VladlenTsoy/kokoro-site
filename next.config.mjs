@@ -5,6 +5,10 @@ const nextConfig = {
             {
                 protocol: "https",
                 hostname: "kokoro-app.ams3.cdn.digitaloceanspaces.com"
+            },
+            {
+                protocol: "https",
+                hostname: "static-maps.yandex.ru"
             }
         ]
     }

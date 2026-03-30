@@ -19,7 +19,7 @@ const DEFAULT_CENTER: [number, number] = [41.311158, 69.279737]
 const DEFAULT_ZOOM = 12
 
 interface MapBlockProps {
-    onChangePlaceMark?: (name: string, description: string) => void
+    onChangePlaceMark?: (name: string, description: string, coords: [number, number]) => void
     externalCoords?: [number, number] | null
 }
 
@@ -41,7 +41,7 @@ const MapBlock: React.FC<MapBlockProps> = ({onChangePlaceMark, externalCoords}) 
         const collection = data.response?.GeoObjectCollection?.featureMember?.map((item: any) => item.GeoObject)
         const firstCollection = collection?.at(0)
         placeMarkRef.current?.properties.set("iconCaption", firstCollection?.name)
-        onChangePlaceMark && onChangePlaceMark(firstCollection?.name || "", firstCollection?.description || "")
+        onChangePlaceMark && onChangePlaceMark(firstCollection?.name || "", firstCollection?.description || "", coords)
     }, [onChangePlaceMark])
 
     const checkCoords = useCallback(async (coords: [number, number], zoom = 15) => {

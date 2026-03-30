@@ -6,11 +6,18 @@ interface ButtonProps {
     onClick?: MouseEventHandler<HTMLButtonElement>,
     children?: React.ReactNode
     block?: boolean
+    disabled?: boolean
+    type?: "button" | "submit" | "reset"
 }
 
-const Button: React.FC<ButtonProps> = ({children, onClick, block}) => {
+const Button: React.FC<ButtonProps> = ({children, onClick, block, disabled = false, type = "button"}) => {
     return (
-        <button className={cn(styles.button, {[styles.block]: block})} onClick={onClick}>
+        <button
+            type={type}
+            className={cn(styles.button, {[styles.block]: block, [styles.disabled]: disabled})}
+            onClick={onClick}
+            disabled={disabled}
+        >
             {children}
         </button>
     )

@@ -14,18 +14,21 @@ interface CartTotalBlockProps {
     showCheckoutButton?: boolean
     checkoutButtonText?: string
     onCheckoutClick?: () => void
+    disableCheckoutIfEmpty?: boolean
 }
 
 const CartTotalBlock: React.FC<CartTotalBlockProps> = (
     {
         showCheckoutButton = true,
         checkoutButtonText = "К оформлению",
-        onCheckoutClick
+        onCheckoutClick,
+        disableCheckoutIfEmpty = true
     }
 ) => {
     const items = useSelector(selectCartItems)
     const total = useSelector(selectCartTotal)
     const router = useRouter()
+    const isCheckoutDisabled = disableCheckoutIfEmpty && items.length === 0
 
     return (
         <div className={styles.container}>
@@ -56,8 +59,18 @@ const CartTotalBlock: React.FC<CartTotalBlockProps> = (
                 <div className={styles.label}>Всего:</div>
                 <div className={styles.value}>{formatPrice(total)}сум</div>
             </div>
+            {isCheckoutDisabled && (
+                <div className={styles.checkout_hint}>Добавьте товары в корзину, чтобы перейти к оформлению.</div>
+            )}
             {showCheckoutButton && (
-                <Button block onClick={() => (onCheckoutClick ? onCheckoutClick() : router.push("/cart/checkout"))}>
+                <Button
+                    block
+                    disabled={isCheckoutDisabled}
+                    onClick={() => {
+                        if (isCheckoutDisabled) return
+                        onCheckoutClick ? onCheckoutClick() : router.push("/cart/checkout")
+                    }}
+                >
                     {checkoutButtonText}
                     <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 7.90674L28.0933 16.0001L20 24.0934" stroke="white" strokeWidth="2"

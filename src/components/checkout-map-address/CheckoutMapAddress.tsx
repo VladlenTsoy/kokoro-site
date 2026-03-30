@@ -6,7 +6,14 @@ import styles from "./CheckoutMapAddress.module.css"
 
 interface CheckoutMapAddressProps {
     showError?: boolean
-    onAddressChange?: (payload: {title: string; description: string}) => void
+    onAddressChange?: (payload: {
+        title: string
+        description: string
+        location: {
+            lat: number
+            lng: number
+        }
+    }) => void
 }
 
 const CheckoutMapAddress: React.FC<CheckoutMapAddressProps> = ({showError = false, onAddressChange}) => {
@@ -14,10 +21,17 @@ const CheckoutMapAddress: React.FC<CheckoutMapAddressProps> = ({showError = fals
     const [descAddressValue, setDescAddressValue] = useState<string>()
     const [externalCoords, setExternalCoords] = useState<[number, number] | null>(null)
 
-    const updateAddressValue = useCallback((name: string, description: string) => {
+    const updateAddressValue = useCallback((name: string, description: string, coords: [number, number]) => {
         setAddressValue(name)
         setDescAddressValue(description)
-        onAddressChange?.({title: name, description})
+        onAddressChange?.({
+            title: name,
+            description,
+            location: {
+                lat: coords[0],
+                lng: coords[1]
+            }
+        })
     }, [onAddressChange])
 
     const onFindMeClick = () => {
