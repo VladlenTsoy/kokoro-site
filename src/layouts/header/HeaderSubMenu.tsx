@@ -8,6 +8,8 @@ import {selectCartCount, selectCartLastAddedAt} from "@/features/cart/cartSlice"
 import Popover from "@/components/popover/Popover"
 import CartIcon from "@/components/icons/CartIcon"
 import CartPopoverContent from "@/features/cart/CartPopoverContent"
+import Link from "next/link"
+import {selectClient} from "@/features/auth/authSlice"
 
 const AUTO_CLOSE_MS = 5_000
 
@@ -17,6 +19,7 @@ const HeaderSubMenu = () => {
     const isCartPage = pathname === "/cart"
     const count = useSelector(selectCartCount)
     const lastAddedAt = useSelector(selectCartLastAddedAt)
+    const client = useSelector(selectClient)
 
     const [isOpen, setIsOpen] = useState(false)
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -66,6 +69,10 @@ const HeaderSubMenu = () => {
 
     return (
         <div className={styles.sub_menu}>
+            <Link className={styles.account_link} href={client ? "/profile" : "/login"} aria-label="Аккаунт">
+                <span className={styles.account_icon}>{client?.name?.trim()?.charAt(0) || "K"}</span>
+                <span className={styles.account_text}>{client ? client.name : "Войти"}</span>
+            </Link>
             <div
                 ref={cartRef}
                 className={styles.cart_wrapper}

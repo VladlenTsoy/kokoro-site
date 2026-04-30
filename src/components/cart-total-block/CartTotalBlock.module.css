@@ -22,7 +22,14 @@
 }
 
 .product_list .product_item .label {
+    display: grid;
+    gap: 4px;
     color: var(--secondary-color)
+}
+
+.product_list .product_item .label span {
+    font-size: 11px;
+    color: #555;
 }
 
 .product_list .product_item .price {
@@ -32,6 +39,26 @@
 
 .promo_code {
     margin-bottom: 24px;
+}
+
+.summary_rows {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.summary_row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    color: var(--secondary-color);
+    font-size: 13px;
+}
+
+.summary_row b {
+    color: var(--black-color);
+    font-weight: 500;
+    text-align: right;
 }
 
 .total {
