@@ -24,7 +24,7 @@ export const mapSizeOptions = (sizes: ProductVariantSize[] | undefined): SelectO
     sizes?.length
         ? sizes.map(item => ({
             title: getTextValue(item.size.title),
-            value: item.size.id
+            value: item.id
         }))
         : []
 
