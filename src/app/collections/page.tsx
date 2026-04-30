@@ -21,6 +21,18 @@ interface SizeFilterOption {
 interface SearchParams {
     colorIds?: string | string[]
     sizeIds?: string | string[]
+    collectionId?: string
+}
+
+interface CollectionProductsResponse {
+    collection: {
+        id: number
+        title: string
+    }
+    items: ProductVariant[]
+    total: number
+    page: number
+    pageSize: number
 }
 
 async function getAllProducts(colorIds: number[], sizeIds: number[]): Promise<ProductVariant[]> {
@@ -50,6 +62,19 @@ async function getAllProducts(colorIds: number[], sizeIds: number[]): Promise<Pr
     return data.items || []
 }
 
+async function getCollectionProducts(collectionId: number): Promise<CollectionProductsResponse | null> {
+    try {
+        const res = await fetch(`${API_BASE_URL}/product/collections/${collectionId}/variants?page=1&pageSize=24`, {
+            next: {revalidate: 60}
+        })
+
+        if (!res.ok) return null
+        return (await res.json()) as CollectionProductsResponse
+    } catch {
+        return null
+    }
+}
+
 async function getColorFilters(): Promise<ColorFilterOption[]> {
     const res = await fetch(`${API_BASE_URL}/product/variants/filters/colors`, {
         next: {revalidate: 60}
@@ -71,23 +96,28 @@ async function getSizeFilters(): Promise<SizeFilterOption[]> {
 const CollectionsPage = async ({searchParams}: {searchParams?: SearchParams}) => {
     const colorIds = parseQueryIds(searchParams?.colorIds)
     const sizeIds = parseQueryIds(searchParams?.sizeIds)
+    const collectionId = Number(searchParams?.collectionId)
+    const hasCollection = Number.isFinite(collectionId) && collectionId > 0
 
-    const [products, colors, sizes] = await Promise.all([
-        getAllProducts(colorIds, sizeIds),
+    const [collectionProducts, allProducts, colors, sizes] = await Promise.all([
+        hasCollection ? getCollectionProducts(collectionId) : Promise.resolve(null),
+        hasCollection ? Promise.resolve([]) : getAllProducts(colorIds, sizeIds),
         getColorFilters(),
         getSizeFilters()
     ])
+    const products = collectionProducts?.items ?? allProducts
+    const title = collectionProducts?.collection.title ?? "Одежда"
 
     return (
         <main className={styles.page}>
-            <Breadcrumb items={[{label: "Одежда", isCurrent: true}]} />
-            <h1 className={styles.title}>Одежда</h1>
+            <Breadcrumb items={[{label: title, isCurrent: true}]} />
+            <h1 className={styles.title}>{title}</h1>
             <div className={styles.layout}>
                 <div className={styles.sidebar}>
                     <ProductFiltersSidebar colors={colors} sizes={sizes} />
                 </div>
                 <div className={styles.content}>
-                    <ProductList title={<h2 className={styles.products_title}>Все товары</h2>} items={products} />
+                    <ProductList title={<h2 className={styles.products_title}>{hasCollection ? "Товары коллекции" : "Все товары"}</h2>} items={products} />
                 </div>
             </div>
         </main>
