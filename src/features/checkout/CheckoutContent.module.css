@@ -23,6 +23,13 @@
     margin-bottom: 1rem;
 }
 
+.auth_notice {
+    margin: -6px 0 18px;
+    color: #237a3b;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
 .error {
     color: #d92d20;
     font-size: 12px;
@@ -34,6 +41,27 @@
     color: #d92d20;
     font-size: 14px;
     line-height: 1.4;
+}
+
+.textarea_label {
+    color: var(--secondary-color);
+    font-size: 12px;
+}
+
+.textarea {
+    width: 100%;
+    min-height: 104px;
+    padding: 14px 12px;
+    border: 1px solid #d8d8d8;
+    background: #fff;
+    outline: none;
+    resize: vertical;
+    font-family: var(--font-text);
+    font-size: 13px;
+}
+
+.textarea:focus {
+    border-color: var(--black-color);
 }
 
 .actions {

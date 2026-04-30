@@ -10,16 +10,20 @@ import {API_BASE_URL} from "@/utils/apiConfig"
 import {CategoryWithSubCategoriesType} from "@/features/categories/CategoryType"
 
 async function getCategoryListWithSubCategories(): Promise<CategoryWithSubCategoriesType[]> {
-    const res = await fetch(`${API_BASE_URL}/product/categories/with-subcategories`, {
-        next: {revalidate: 10}
-    })
+    try {
+        const res = await fetch(`${API_BASE_URL}/product/categories/with-subcategories`, {
+            next: {revalidate: 10}
+        })
 
-    if (!res.ok) return []
+        if (!res.ok) return []
 
-    const data = (await res.json()) as CategoryWithSubCategoriesType[]
-    if (!data) return []
+        const data = (await res.json()) as CategoryWithSubCategoriesType[]
+        if (!data) return []
 
-    return data
+        return data
+    } catch {
+        return []
+    }
 }
 
 const Header: React.FC = async () => {

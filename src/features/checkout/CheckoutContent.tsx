@@ -9,49 +9,21 @@ import {API_BASE_URL} from "@/utils/apiConfig"
 import {useDispatch, useSelector} from "react-redux"
 import {clearCart, selectCartItems} from "@/features/cart/cartSlice"
 import {useRouter} from "next/navigation"
-
-const getUzbekistanLocalDigits = (value: string) => {
-    const digits = value.replace(/\D/g, "")
-    const hasExplicitPlusPrefix = value.trim().startsWith("+")
-
-    if (hasExplicitPlusPrefix) {
-        if (!digits.startsWith("998")) return ""
-        return digits.slice(3, 12)
-    }
-
-    if (digits.startsWith("998")) return digits.slice(3, 12)
-    if (digits.startsWith("0")) return digits.slice(1, 10)
-    return digits.slice(0, 9)
-}
-
-const formatUzbekistanPhone = (local: string) => {
-    let formatted = "+998"
-
-    if (local.length > 0) {
-        formatted += ` (${local.slice(0, 2)}`
-    }
-    if (local.length > 2) {
-        formatted += ")"
-    }
-    if (local.length > 2) {
-        formatted += ` ${local.slice(2, 5)}`
-    }
-    if (local.length > 5) {
-        formatted += `-${local.slice(5, 7)}`
-    }
-    if (local.length > 7) {
-        formatted += `-${local.slice(7, 9)}`
-    }
-
-    return formatted
-}
-
-const isUzbekistanPhoneValid = (local: string) => local.length === 9
+import {selectAccessToken, selectClient} from "@/features/auth/authSlice"
+import {
+    formatUzbekistanPhone,
+    getUzbekistanLocalDigits,
+    isUzbekistanPhoneValid,
+    toUzbekistanE164
+} from "@/utils/phoneFormat"
+import {saveGuestOrderAccess} from "@/features/orders/guestOrdersSlice"
 
 const CheckoutContent = () => {
     const router = useRouter()
     const dispatch = useDispatch()
     const cartItems = useSelector(selectCartItems)
+    const accessToken = useSelector(selectAccessToken)
+    const client = useSelector(selectClient)
     const [name, setName] = useState("")
     const [phoneLocal, setPhoneLocal] = useState("")
     const [addressTitle, setAddressTitle] = useState("")
@@ -61,10 +33,22 @@ const CheckoutContent = () => {
     const [nameError, setNameError] = useState("")
     const [phoneError, setPhoneError] = useState("")
     const [addressError, setAddressError] = useState("")
+    const [promoCode, setPromoCode] = useState("")
+    const [bonusToSpend, setBonusToSpend] = useState("")
+    const [comment, setComment] = useState("")
     const [requestError, setRequestError] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [addressResetToken, setAddressResetToken] = useState(0)
     const [isRedirectingAfterCreate, setIsRedirectingAfterCreate] = useState(false)
+
+    useEffect(() => {
+        if (!client) return
+
+        setName(client.name ?? "")
+        if (client.phone) {
+            setPhoneLocal(getUzbekistanLocalDigits(client.phone))
+        }
+    }, [client])
 
     useEffect(() => {
         if (isSubmitting || isRedirectingAfterCreate) return
@@ -116,8 +100,8 @@ const CheckoutContent = () => {
     }
 
     const validateForm = () => {
-        const nameValid = validateName()
-        const phoneValid = validatePhone()
+        const nameValid = accessToken ? true : validateName()
+        const phoneValid = accessToken ? true : validatePhone()
         const addressValid = validateAddress()
         return nameValid && phoneValid && addressValid
     }
@@ -134,10 +118,12 @@ const CheckoutContent = () => {
         if (!addressLocation) return
 
         const payload = {
-            client: {
-                name: name.trim(),
-                phone: `+998${phoneLocal}`
-            },
+            ...(!accessToken ? {
+                client: {
+                    name: name.trim(),
+                    phone: toUzbekistanE164(phoneLocal)
+                }
+            } : {}),
             address: {
                 address: addressDescription
                     ? `${addressTitle}, ${addressDescription}`
@@ -149,8 +135,12 @@ const CheckoutContent = () => {
             },
             items: cartItems.map(item => ({
                 productVariantId: item.productVariantId,
+                ...(item.sizeId ? {sizeId: item.sizeId} : {}),
                 qty: item.qty
-            }))
+            })),
+            ...(promoCode.trim() ? {promoCode: promoCode.trim()} : {}),
+            ...(bonusToSpend.trim() ? {bonusToSpend: Number(bonusToSpend.replace(/\D/g, ""))} : {}),
+            ...(comment.trim() ? {comment: comment.trim()} : {})
         }
 
         setIsSubmitting(true)
@@ -158,7 +148,8 @@ const CheckoutContent = () => {
             const response = await fetch(`${API_BASE_URL}/client/orders`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    ...(accessToken ? {Authorization: `Bearer ${accessToken}`} : {})
                 },
                 body: JSON.stringify(payload)
             })
@@ -189,6 +180,17 @@ const CheckoutContent = () => {
                 return
             }
 
+            const orderAccessToken = typeof responseData?.accessToken === "string"
+                ? responseData.accessToken
+                : (typeof responseData?.order?.accessToken === "string" ? responseData.order.accessToken : null)
+
+            if (!accessToken && orderAccessToken) {
+                dispatch(saveGuestOrderAccess({
+                    orderId: normalizedOrderId,
+                    orderAccessToken
+                }))
+            }
+
             setIsRedirectingAfterCreate(true)
             dispatch(clearCart())
             setName("")
@@ -196,6 +198,9 @@ const CheckoutContent = () => {
             setAddressTitle("")
             setAddressDescription("")
             setAddressLocation(null)
+            setPromoCode("")
+            setBonusToSpend("")
+            setComment("")
             setAddressResetToken(prev => prev + 1)
             router.push(`/orders/${normalizedOrderId}?success=1`)
         } catch {
@@ -218,6 +223,11 @@ const CheckoutContent = () => {
         <div className={styles.container}>
             <form onSubmit={onSubmitHandler}>
                 <h4 className={styles.form_title}>Основные данные</h4>
+                {accessToken && client && (
+                    <div className={styles.auth_notice}>
+                        Заказ будет оформлен на аккаунт {client.name}
+                    </div>
+                )}
                 <div className={styles.form_items}>
                     <div className={styles.form_item}>
                         <Input
@@ -261,6 +271,37 @@ const CheckoutContent = () => {
                     }}
                 />
 
+                <h4 className={styles.form_title}>Оплата</h4>
+                <div className={styles.form_items}>
+                    <div className={styles.form_item}>
+                        <Input
+                            label="Промокод"
+                            value={promoCode}
+                            onChange={e => setPromoCode(e.target.value)}
+                            placeholder="KOKORO"
+                        />
+                    </div>
+                    <div className={styles.form_item}>
+                        <Input
+                            label="Бонусы к списанию"
+                            value={bonusToSpend}
+                            onChange={e => setBonusToSpend(e.target.value.replace(/\D/g, ""))}
+                            inputMode="numeric"
+                            placeholder="0"
+                        />
+                    </div>
+                </div>
+                <div className={styles.form_item}>
+                    <label className={styles.textarea_label}>Комментарий</label>
+                    <textarea
+                        className={styles.textarea}
+                        value={comment}
+                        onChange={e => setComment(e.target.value)}
+                        rows={4}
+                        placeholder="Например, уточнение по доставке"
+                    />
+                </div>
+
                 {requestError && <div className={styles.error_message}>{requestError}</div>}
             </form>
 
@@ -271,6 +312,9 @@ const CheckoutContent = () => {
                         void submitCheckout()
                     }}
                     disableCheckoutIfEmpty={false}
+                    promoCode={promoCode}
+                    bonusToSpend={Number(bonusToSpend || 0)}
+                    showPromoInput={false}
                 />
             </div>
         </div>

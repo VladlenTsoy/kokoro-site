@@ -1,6 +1,42 @@
 .sub_menu {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
     text-align: right;
     padding-right: 24px;
+}
+
+.account_link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--black-color);
+    transition: color .15s ease-in-out;
+}
+
+.account_link:hover {
+    color: var(--primary-color);
+}
+
+.account_icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #d8d8d8;
+    border-radius: 50%;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.account_text {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
 }
 
 .sub_menu .cart_wrapper {
@@ -59,10 +95,15 @@
 @media (max-width: 992px) {
     .sub_menu {
         padding-right: 0;
+        gap: 8px;
     }
 
     .sub_menu .cart_icon_block svg {
         height: 22px;
         width: 22px;
+    }
+
+    .account_text {
+        display: none;
     }
 }

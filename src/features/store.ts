@@ -3,6 +3,8 @@ import {persistCombineReducers, persistStore} from "redux-persist"
 import storage from "redux-persist/lib/storage"
 import {productVariantsApi} from "@/features/product-variants/productVariantsApi"
 import {cartReducer} from "@/features/cart/cartSlice"
+import {authReducer} from "@/features/auth/authSlice"
+import {guestOrdersReducer} from "@/features/orders/guestOrdersSlice"
 
 const persistConfig = {
     key: "root",
@@ -12,7 +14,9 @@ const persistConfig = {
 
 const persistedCombineReducers = persistCombineReducers(persistConfig, {
     [productVariantsApi.reducerPath]: productVariantsApi.reducer,
-    cart: cartReducer
+    cart: cartReducer,
+    auth: authReducer,
+    guestOrders: guestOrdersReducer
 })
 
 export const store = configureStore({

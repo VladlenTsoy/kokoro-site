@@ -1,19 +1,17 @@
 import React, {Suspense} from "react"
 import Container from "@/layouts/container/Container"
 import Breadcrumb from "@/components/breadcrumb/Breadcrumb"
-import OrderDetailsContent from "@/features/client/OrderDetailsContent"
+import AuthPageContent from "@/features/auth/AuthPageContent"
 
-const Page = ({params}: {params: {id: string}}) => {
-    const orderId = Number(params.id)
-
+const Page = () => {
     return (
         <Container>
             <Breadcrumb items={[
-                {href: "/orders", label: "Заказы"},
-                {label: `Заказ #${params.id}`, isCurrent: true}
+                {href: "/", label: "Главная"},
+                {label: "Вход", isCurrent: true}
             ]} />
             <Suspense fallback={null}>
-                <OrderDetailsContent orderId={orderId} />
+                <AuthPageContent />
             </Suspense>
         </Container>
     )

@@ -40,6 +40,65 @@
     letter-spacing: .04em;
 }
 
+.status_stack {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.order_actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+}
+
+.cancel_box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.cancel_input {
+    min-width: 260px;
+    padding: 14px 12px;
+    border: 1px solid #d8d8d8;
+    font-family: var(--font-text);
+    outline: none;
+}
+
+.text_button {
+    background: none;
+    color: var(--black-color);
+    font-size: 13px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.text_button:disabled {
+    color: var(--secondary-color);
+    cursor: not-allowed;
+}
+
+.error_message {
+    color: #d92d20;
+    font-size: 13px;
+}
+
+.history_item {
+    display: grid;
+    gap: 4px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.history_item span,
+.history_item p {
+    color: var(--secondary-color);
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
