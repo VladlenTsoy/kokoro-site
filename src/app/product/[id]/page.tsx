@@ -19,6 +19,7 @@ const PRODUCT_REVALIDATE_SECONDS = 10
 const stripHtml = (value: string) => value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
 
 const resolveProductDescription = (product: ProductVariant) => {
+    if (product.description) return stripHtml(getTextValue(product.description))
     const firstProperty = product.product?.properties?.[0]?.description
     if (firstProperty) return stripHtml(getTextValue(firstProperty))
     return `${getTextValue(product.title)} от KOKORO`
@@ -106,6 +107,7 @@ const Page = async ({params}: {params: {id: string}}) => {
         : []
 
     const tabs = [...propertyTabs, ...measurementTabs]
+    const description = resolveProductDescription(product)
 
     return (
         <Container>
@@ -125,9 +127,7 @@ const Page = async ({params}: {params: {id: string}}) => {
                             />
                         </div>
                         <div className={styles.description}>
-                            Мягко прилегающая к телу зип-худи создан из высококачественного хлопка. Вместительный
-                            основной карман скрывает внутри несколько маленьких карманов для хранения мелочи, ключей или
-                            телефона. Свободный крой позволит вам оставаться активным даже в прохладную погоду.
+                            {description}
                         </div>
                         <ProductPurchaseControls
                             productId={product.id}

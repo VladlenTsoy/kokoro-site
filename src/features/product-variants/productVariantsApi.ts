@@ -61,6 +61,7 @@ export interface ProductVariantMeasurement {
 export interface ProductVariant {
     id: number
     title: string
+    description?: string | null
     price: number
     product_id: number
     storage_id: number
