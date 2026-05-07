@@ -13,9 +13,10 @@ interface ProductCardProps {
     price: number
     image: string
     discount?: number
+    availableQty?: number
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({id, title, price, image, discount}) => {
+const ProductCard: React.FC<ProductCardProps> = ({id, title, price, image, discount, availableQty}) => {
     const safeTitle = getTextValue(title)
 
     return (
@@ -24,6 +25,9 @@ const ProductCard: React.FC<ProductCardProps> = ({id, title, price, image, disco
                 <div className={styles.image_wrapper}>
                     <ImageBlock src={image} alt={safeTitle} priority={false} fill />
                 </div>
+                {typeof availableQty === "number" && availableQty <= 0 && (
+                    <div className={styles.stock_badge}>Нет в наличии</div>
+                )}
                 <div className={styles.title}>{safeTitle}</div>
                 <div className={cn(styles.price, {[styles.discount]: !!discount})}>
                     {formatPrice(discount ? calculateDiscountedTotal(price, discount) : price)} сум

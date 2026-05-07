@@ -53,3 +53,14 @@
 /*        height: 184px;*/
 /*    }*/
 /*}*/
+
+.stock_badge {
+    margin: -0.25rem 0 0.5rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: #f4f4f4;
+    color: #7a7a7a;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}

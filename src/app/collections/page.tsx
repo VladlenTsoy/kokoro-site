@@ -21,13 +21,14 @@ interface SizeFilterOption {
 interface SearchParams {
     colorIds?: string | string[]
     sizeIds?: string | string[]
+    sortBy?: string
 }
 
-async function getAllProducts(colorIds: number[], sizeIds: number[]): Promise<ProductVariant[]> {
+async function getAllProducts(colorIds: number[], sizeIds: number[], sortBy: string): Promise<ProductVariant[]> {
     const params = new URLSearchParams({
         page: "1",
         pageSize: "24",
-        sortOrder: "desc"
+        sortOrder: sortBy
     })
 
     const colorQuery = serializeQueryIds(colorIds)
@@ -71,9 +72,10 @@ async function getSizeFilters(): Promise<SizeFilterOption[]> {
 const CollectionsPage = async ({searchParams}: {searchParams?: SearchParams}) => {
     const colorIds = parseQueryIds(searchParams?.colorIds)
     const sizeIds = parseQueryIds(searchParams?.sizeIds)
+    const sortBy = searchParams?.sortBy || "newest"
 
     const [products, colors, sizes] = await Promise.all([
-        getAllProducts(colorIds, sizeIds),
+        getAllProducts(colorIds, sizeIds, sortBy),
         getColorFilters(),
         getSizeFilters()
     ])

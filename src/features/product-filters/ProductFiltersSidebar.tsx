@@ -16,10 +16,19 @@ interface SizeFilterOption {
     title: string
 }
 
+type SortValue = "newest" | "price_asc" | "price_desc" | "oldest"
+
 interface ProductFiltersSidebarProps {
     colors: ColorFilterOption[]
     sizes: SizeFilterOption[]
 }
+
+const SORT_OPTIONS: {value: SortValue; label: string; hint: string}[] = [
+    {value: "newest", label: "Сначала новые", hint: "новинки выше"},
+    {value: "price_asc", label: "Цена: по возрастанию", hint: "дешевле выше"},
+    {value: "price_desc", label: "Цена: по убыванию", hint: "дороже выше"},
+    {value: "oldest", label: "Сначала старые", hint: "старые выше"}
+]
 
 const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({colors, sizes}) => {
     const router = useRouter()
@@ -28,6 +37,14 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({colors, si
 
     const selectedColorIds = parseQueryIds(searchParams.getAll("colorIds").length ? searchParams.getAll("colorIds") : searchParams.get("colorIds") || undefined)
     const selectedSizeIds = parseQueryIds(searchParams.getAll("sizeIds").length ? searchParams.getAll("sizeIds") : searchParams.get("sizeIds") || undefined)
+    const selectedSort = (searchParams.get("sortBy") || "newest") as SortValue
+    const activeFiltersCount = selectedColorIds.length + selectedSizeIds.length
+
+    const pushQuery = (next: URLSearchParams) => {
+        next.set("page", "1")
+        const query = next.toString()
+        router.push(query ? `${pathname}?${query}` : pathname)
+    }
 
     const updateQuery = (nextColorIds: number[], nextSizeIds: number[]) => {
         const next = new URLSearchParams(searchParams.toString())
@@ -41,10 +58,14 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({colors, si
         if (sizeValue) next.set("sizeIds", sizeValue)
         else next.delete("sizeIds")
 
-        next.set("page", "1")
+        pushQuery(next)
+    }
 
-        const query = next.toString()
-        router.push(query ? `${pathname}?${query}` : pathname)
+    const setSort = (sortBy: SortValue) => {
+        const next = new URLSearchParams(searchParams.toString())
+        if (sortBy === "newest") next.delete("sortBy")
+        else next.set("sortBy", sortBy)
+        pushQuery(next)
     }
 
     const toggleColor = (id: number) => {
@@ -66,20 +87,54 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({colors, si
     }
 
     const resetFilters = () => {
-        updateQuery([], [])
+        const next = new URLSearchParams(searchParams.toString())
+        next.delete("colorIds")
+        next.delete("sizeIds")
+        pushQuery(next)
+    }
+
+    const resetAll = () => {
+        const next = new URLSearchParams(searchParams.toString())
+        next.delete("colorIds")
+        next.delete("sizeIds")
+        next.delete("sortBy")
+        pushQuery(next)
     }
 
     return (
         <aside className={styles.sidebar}>
             <div className={styles.header}>
-                <h3 className={styles.title}>Фильтр</h3>
-                <button type="button" className={styles.reset} onClick={resetFilters}>
-                    Сбросить
+                <div>
+                    <h3 className={styles.title}>Подбор</h3>
+                    <div className={styles.subtitle}>{activeFiltersCount ? `Выбрано: ${activeFiltersCount}` : "Цвет, размер и сортировка"}</div>
+                </div>
+                <button type="button" className={styles.reset} onClick={resetAll}>
+                    Сбросить всё
                 </button>
             </div>
 
             <div className={styles.block}>
-                <div className={styles.block_title}>Цвета</div>
+                <div className={styles.block_title}>Сортировка</div>
+                <div className={styles.sort_options}>
+                    {SORT_OPTIONS.map(option => (
+                        <button
+                            key={option.value}
+                            type="button"
+                            className={`${styles.sort_option} ${selectedSort === option.value ? styles.sort_option_active : ""}`}
+                            onClick={() => setSort(option.value)}
+                        >
+                            <span>{option.label}</span>
+                            <small>{option.hint}</small>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className={styles.block}>
+                <div className={styles.block_head}>
+                    <div className={styles.block_title}>Цвета</div>
+                    {!!selectedColorIds.length && <button type="button" className={styles.inline_reset} onClick={() => updateQuery([], selectedSizeIds)}>Очистить</button>}
+                </div>
                 <div className={styles.options}>
                     {colors.map(color => (
                         <label key={color.id} className={styles.option}>
@@ -104,23 +159,30 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({colors, si
             </div>
 
             <div className={styles.block}>
-                <div className={styles.block_title}>Размеры</div>
-                <div className={styles.options}>
+                <div className={styles.block_head}>
+                    <div className={styles.block_title}>Размеры</div>
+                    {!!selectedSizeIds.length && <button type="button" className={styles.inline_reset} onClick={() => updateQuery(selectedColorIds, [])}>Очистить</button>}
+                </div>
+                <div className={styles.size_options}>
                     {sizes.map(size => (
-                        <label key={size.id} className={styles.option}>
-                            <input
-                                className={styles.checkbox_input}
-                                type="checkbox"
-                                checked={selectedSizeIds.includes(size.id)}
-                                onChange={() => toggleSize(size.id)}
-                            />
-                            <span className={styles.checkbox} />
-                            <span className={styles.option_label}>{size.title}</span>
-                        </label>
+                        <button
+                            key={size.id}
+                            type="button"
+                            className={`${styles.size_option} ${selectedSizeIds.includes(size.id) ? styles.size_option_active : ""}`}
+                            onClick={() => toggleSize(size.id)}
+                        >
+                            {size.title}
+                        </button>
                     ))}
                     {sizes.length === 0 && <div className={styles.empty}>Нет доступных размеров</div>}
                 </div>
             </div>
+
+            {!!activeFiltersCount && (
+                <button type="button" className={styles.apply_reset} onClick={resetFilters}>
+                    Очистить фильтры
+                </button>
+            )}
         </aside>
     )
 }

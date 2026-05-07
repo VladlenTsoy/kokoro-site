@@ -11,6 +11,10 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({title, items = [], limit}) => {
     const visibleItems = limit ? items.slice(0, limit) : items
+    const getAvailableQty = (item: ProductVariant) => (item.sizes || []).reduce(
+        (sum, size) => sum + Math.max(Number(size.qty || 0) - Number(size.reservedQty || 0), 0),
+        0
+    )
 
     return (
         <div className={styles.product_list}>
@@ -24,6 +28,7 @@ const ProductList: React.FC<ProductListProps> = ({title, items = [], limit}) => 
                         price={item.price}
                         discount={item?.discount?.discountPercent ? Number(item?.discount?.discountPercent) : undefined}
                         image={item.images?.[0]?.path || "/images/t-shirt.png"}
+                        availableQty={getAvailableQty(item)}
                     />
                 )}
             </div>

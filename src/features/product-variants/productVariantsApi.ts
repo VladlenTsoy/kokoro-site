@@ -32,6 +32,8 @@ export interface ProductVariantSize {
     size_id: number
     cost_price: number
     qty: number
+    reservedQty?: number
+    soldQty?: number
     min_qty: number
     productVariant: string
     size: {

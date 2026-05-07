@@ -25,6 +25,7 @@ interface SizeFilterOption {
 interface SearchParams {
     colorIds?: string | string[]
     sizeIds?: string | string[]
+    sortBy?: string
 }
 
 async function getCategories(): Promise<CategoryWithSubCategoriesType[]> {
@@ -39,11 +40,11 @@ async function getCategories(): Promise<CategoryWithSubCategoriesType[]> {
     return (await res.json()) as CategoryWithSubCategoriesType[]
 }
 
-async function getProductsByCategory(categoryId: number, colorIds: number[], sizeIds: number[]): Promise<ProductVariant[]> {
+async function getProductsByCategory(categoryId: number, colorIds: number[], sizeIds: number[], sortBy: string): Promise<ProductVariant[]> {
     const params = new URLSearchParams({
         page: "1",
         pageSize: "24",
-        sortOrder: "desc",
+        sortOrder: sortBy,
         categoryId: String(categoryId)
     })
 
@@ -97,6 +98,7 @@ interface PageProps {
 const CategoryPage = async ({params, searchParams}: PageProps) => {
     const colorIds = parseQueryIds(searchParams?.colorIds)
     const sizeIds = parseQueryIds(searchParams?.sizeIds)
+    const sortBy = searchParams?.sortBy || "newest"
 
     const categories = await getCategories()
     const tree = buildCategoryTree(categories)
@@ -106,7 +108,7 @@ const CategoryPage = async ({params, searchParams}: PageProps) => {
     if (!currentCategory) notFound()
 
     const [products, colors, sizes] = await Promise.all([
-        getProductsByCategory(currentCategory.id, colorIds, sizeIds),
+        getProductsByCategory(currentCategory.id, colorIds, sizeIds, sortBy),
         getColorFilters(currentCategory.id),
         getSizeFilters(currentCategory.id)
     ])
