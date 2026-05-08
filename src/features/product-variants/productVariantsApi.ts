@@ -97,6 +97,7 @@ export type ProductVariantsResponse =
 export interface ProductVariantsQueryParams {
     page?: number
     per_page?: number
+    search?: string
 
     [key: string]: string | number | boolean | undefined
 }

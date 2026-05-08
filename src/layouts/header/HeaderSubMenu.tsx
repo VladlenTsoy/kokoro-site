@@ -10,6 +10,7 @@ import CartIcon from "@/components/icons/CartIcon"
 import CartPopoverContent from "@/features/cart/CartPopoverContent"
 import Link from "next/link"
 import {selectClient} from "@/features/auth/authSlice"
+import SearchForm from "@/components/search-form/SearchForm"
 
 const AUTO_CLOSE_MS = 5_000
 
@@ -69,6 +70,7 @@ const HeaderSubMenu = () => {
 
     return (
         <div className={styles.sub_menu}>
+            <SearchForm compact />
             <Link className={styles.account_link} href={client ? "/profile" : "/login"} aria-label="Аккаунт">
                 <span className={styles.account_icon}>{client?.name?.trim()?.charAt(0) || "K"}</span>
                 <span className={styles.account_text}>{client ? client.name : "Войти"}</span>

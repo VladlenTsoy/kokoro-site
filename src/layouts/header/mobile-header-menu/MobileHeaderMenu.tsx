@@ -10,6 +10,7 @@ import {usePathname} from "next/navigation"
 import MobileHeaderMenuIcon from "@/layouts/header/mobile-header-menu/MobileHeaderMenuIcon"
 import type {CategoryWithSubCategoriesType} from "@/features/categories/CategoryType"
 import {buildCategoryTree} from "@/features/categories/categoryTree"
+import SearchForm from "@/components/search-form/SearchForm"
 
 interface Props {
     isOpen: boolean
@@ -101,6 +102,7 @@ const MobileHeaderMenu: React.FC<Props> = ({isOpen, onMenuToggle, categories}) =
                         >
                             {!showCollections && (
                                 <motion.div className={styles.modal_menu} variants={itemVariants}>
+                                    <SearchForm mobile onSubmitComplete={onMenuToggle} />
                                     <Link href="/" onClick={onMenuToggle}>Главная</Link>
                                     <Link href="/about-us" onClick={onMenuToggle}>О Нас</Link>
                                     <button type="button" className={styles.menu_button} onClick={() => setShowCollections(true)}>
