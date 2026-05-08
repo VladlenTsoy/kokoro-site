@@ -14,9 +14,41 @@ import Breadcrumb from "@/components/breadcrumb/Breadcrumb"
 import {API_BASE_URL} from "@/utils/apiConfig"
 import ProductDetailsCollapse from "@/features/product/ProductDetailsCollapse"
 import {SITE_URL} from "@/utils/siteConfig"
+import {calculateDiscountedTotal} from "@/utils/calculateDiscountedTotal"
 const PRODUCT_REVALIDATE_SECONDS = 10
 
 const stripHtml = (value: string) => value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
+const escapeJsonForHtml = (value: unknown) => JSON.stringify(value).replace(/</g, "\\u003c")
+const toAbsoluteUrl = (url?: string) => {
+    if (!url) return undefined
+    if (/^https?:\/\//i.test(url)) return url
+    return `${SITE_URL}${url.startsWith("/") ? "" : "/"}${url}`
+}
+
+const resolveProductPrice = (product: ProductVariant) => {
+    const discount = product?.discount?.discountPercent ? Number(product.discount.discountPercent) : undefined
+    return discount ? calculateDiscountedTotal(product.price, discount) : product.price
+}
+
+const buildProductJsonLd = (product: ProductVariant, canonical: string) => {
+    const imageUrls = product.images?.map(image => toAbsoluteUrl(image.path)).filter(Boolean) ?? []
+
+    return {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: getTextValue(product.title),
+        description: resolveProductDescription(product),
+        image: imageUrls.length ? imageUrls : undefined,
+        sku: String(product.id),
+        color: product.color?.title ? getTextValue(product.color.title) : undefined,
+        offers: {
+            "@type": "Offer",
+            url: canonical,
+            priceCurrency: "UZS",
+            price: resolveProductPrice(product)
+        }
+    }
+}
 
 const resolveProductDescription = (product: ProductVariant) => {
     const firstProperty = product.product?.properties?.[0]?.description
@@ -88,6 +120,8 @@ export async function generateMetadata({params}: {params: {id: string}}): Promis
 
 const Page = async ({params}: {params: {id: string}}) => {
     const product = await getProductVariant(params.id)
+    const canonical = `${SITE_URL}/product/${params.id}`
+    const productJsonLd = buildProductJsonLd(product, canonical)
 
     const images = mapImages(product.images)
     const sizeOptions = mapSizeOptions(product.sizes)
@@ -109,6 +143,10 @@ const Page = async ({params}: {params: {id: string}}) => {
 
     return (
         <Container>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{__html: escapeJsonForHtml(productJsonLd)}}
+            />
             <Breadcrumb items={[
                 {href: "/collections", label: "Одежда"},
                 {label: getTextValue(product.title), isCurrent: true}
