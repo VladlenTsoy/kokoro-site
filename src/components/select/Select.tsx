@@ -10,6 +10,8 @@ export interface OptionProps {
     color?: string
     title: string
     value: string | number
+    disabled?: boolean
+    hint?: string
 }
 
 interface SelectProps {
@@ -24,14 +26,16 @@ const Select: React.FC<SelectProps> = ({options, onChange}) => {
     const [activeIndex, setActiveIndex] = useState(0)
 
     const hasOptions = options.length > 0
+    const hasEnabledOptions = options.some(option => !option.disabled)
     const selected = useMemo(() => options[activeIndex], [activeIndex, options])
 
     const onClickHandler = () => {
-        if (!hasOptions) return
+        if (!hasOptions || !hasEnabledOptions) return
         setVisible(prevState => !prevState)
     }
 
     const onSelectHandler = (option: OptionProps, index: number) => {
+        if (option.disabled) return
         setActiveIndex(index)
         setVisible(false)
         onChange?.(option)
@@ -45,10 +49,12 @@ const Select: React.FC<SelectProps> = ({options, onChange}) => {
         }
 
         const safeIndex = Math.min(activeIndex, options.length - 1)
-        if (safeIndex !== activeIndex) {
-            setActiveIndex(safeIndex)
+        const firstEnabledIndex = options.findIndex(option => !option.disabled)
+        const nextIndex = options[safeIndex]?.disabled && firstEnabledIndex >= 0 ? firstEnabledIndex : safeIndex
+        if (nextIndex !== activeIndex) {
+            setActiveIndex(nextIndex)
         }
-    }, [activeIndex, hasOptions, options.length])
+    }, [activeIndex, hasOptions, options])
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -78,7 +84,7 @@ const Select: React.FC<SelectProps> = ({options, onChange}) => {
     }, [visible])
 
     const onTriggerKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-        if (!hasOptions) return
+        if (!hasOptions || !hasEnabledOptions) return
 
         if (event.key === "ArrowDown" || event.key === "ArrowUp") {
             event.preventDefault()
@@ -101,13 +107,13 @@ const Select: React.FC<SelectProps> = ({options, onChange}) => {
         <div className={styles.wrapper} ref={wrapperRef}>
             <button
                 type="button"
-                className={cn(styles.select, {[styles.active]: visible, [styles.disabled]: !hasOptions})}
+                className={cn(styles.select, {[styles.active]: visible, [styles.disabled]: !hasOptions || !hasEnabledOptions})}
                 onClick={onClickHandler}
                 onKeyDown={onTriggerKeyDown}
                 aria-haspopup="listbox"
                 aria-expanded={visible}
                 aria-controls={`${selectId}-listbox`}
-                disabled={!hasOptions}
+                disabled={!hasOptions || !hasEnabledOptions}
             >
                 {selected?.color && <span className={styles.color} style={{background: selected.color}} />}
                 <span>{getTextValue(selected?.title || "Нет вариантов")}</span>
@@ -136,12 +142,14 @@ const Select: React.FC<SelectProps> = ({options, onChange}) => {
                                 role="option"
                                 aria-selected={option.value === selected?.value}
                                 type="button"
-                                className={cn(styles.option, "option")}
+                                className={cn(styles.option, "option", {[styles.optionDisabled]: option.disabled})}
                                 key={option.value}
                                 onClick={() => onSelectHandler(option, key)}
+                                disabled={option.disabled}
                             >
                                 {option?.color && <div className={styles.color} style={{background: option.color}} />}
-                                {getTextValue(option.title)}
+                                <span>{getTextValue(option.title)}</span>
+                                {option.hint && <span className={styles.hint}>{getTextValue(option.hint)}</span>}
                                 {
                                     option.value === selected?.value &&
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"

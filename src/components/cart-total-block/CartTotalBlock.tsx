@@ -19,6 +19,8 @@ interface CartTotalBlockProps {
     bonusToSpend?: number
     deliveryPrice?: number
     showPromoInput?: boolean
+    checkoutDisabled?: boolean
+    checkoutDisabledMessage?: string
 }
 
 const CartTotalBlock: React.FC<CartTotalBlockProps> = (
@@ -30,13 +32,15 @@ const CartTotalBlock: React.FC<CartTotalBlockProps> = (
         promoCode,
         bonusToSpend = 0,
         deliveryPrice = 0,
-        showPromoInput = true
+        showPromoInput = true,
+        checkoutDisabled = false,
+        checkoutDisabledMessage
     }
 ) => {
     const items = useSelector(selectCartItems)
     const total = useSelector(selectCartTotal)
     const router = useRouter()
-    const isCheckoutDisabled = disableCheckoutIfEmpty && items.length === 0
+    const isCheckoutDisabled = checkoutDisabled || (disableCheckoutIfEmpty && items.length === 0)
 
     return (
         <div className={styles.container}>
@@ -90,7 +94,9 @@ const CartTotalBlock: React.FC<CartTotalBlockProps> = (
                 <div className={styles.value}>{formatPrice(Math.max(total + deliveryPrice - bonusToSpend, 0))}сум</div>
             </div>
             {isCheckoutDisabled && (
-                <div className={styles.checkout_hint}>Добавьте товары в корзину, чтобы перейти к оформлению.</div>
+                <div className={styles.checkout_hint}>
+                    {checkoutDisabledMessage || "Добавьте товары в корзину, чтобы перейти к оформлению."}
+                </div>
             )}
             {showCheckoutButton && (
                 <Button

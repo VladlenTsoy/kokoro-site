@@ -5,6 +5,7 @@ import {useSelector} from "react-redux"
 import CartProductItem from "@/components/cart-product-item/CartProductItem"
 import CartTotalBlock from "@/components/cart-total-block/CartTotalBlock"
 import {selectCartItems} from "@/features/cart/cartSlice"
+import {useCartAvailability} from "@/features/cart/useCartAvailability"
 import styles from "@/app/cart/page.module.css"
 import Image from "next/image"
 import Button from "@/components/button/Button"
@@ -13,6 +14,7 @@ import {useRouter} from "next/navigation"
 const CartContent = () => {
     const router = useRouter()
     const items = useSelector(selectCartItems)
+    const {issueByItemId, hasUnavailableItems, isCheckingAvailability} = useCartAvailability(items)
 
     if (items.length === 0) {
         return (
@@ -35,11 +37,14 @@ const CartContent = () => {
         <>
             <div className={styles.product_list}>
                 {items.map(item => (
-                    <CartProductItem key={item.id} item={item} />
+                    <CartProductItem key={item.id} item={item} availabilityMessage={issueByItemId.get(item.id)} />
                 ))}
             </div>
             <div className={styles.sticky_sidebar}>
-                <CartTotalBlock />
+                <CartTotalBlock
+                    checkoutDisabled={hasUnavailableItems || isCheckingAvailability}
+                    checkoutDisabledMessage={hasUnavailableItems ? "Проверьте недоступные товары перед оформлением." : "Проверяем остатки..."}
+                />
             </div>
         </>
     )

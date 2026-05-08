@@ -8,6 +8,7 @@ import CheckoutMapAddress from "@/components/checkout-map-address/CheckoutMapAdd
 import {API_BASE_URL} from "@/utils/apiConfig"
 import {useDispatch, useSelector} from "react-redux"
 import {clearCart, selectCartItems} from "@/features/cart/cartSlice"
+import {useCartAvailability} from "@/features/cart/useCartAvailability"
 import {useRouter} from "next/navigation"
 import {selectAccessToken, selectClient} from "@/features/auth/authSlice"
 import {
@@ -22,6 +23,7 @@ const CheckoutContent = () => {
     const router = useRouter()
     const dispatch = useDispatch()
     const cartItems = useSelector(selectCartItems)
+    const {hasUnavailableItems, issues, isCheckingAvailability} = useCartAvailability(cartItems)
     const accessToken = useSelector(selectAccessToken)
     const client = useSelector(selectClient)
     const [name, setName] = useState("")
@@ -112,6 +114,14 @@ const CheckoutContent = () => {
 
         if (cartItems.length === 0) {
             setRequestError("Корзина пуста. Добавьте товары перед оформлением заказа.")
+            return
+        }
+        if (isCheckingAvailability) {
+            setRequestError("Проверяем доступность товаров. Попробуйте ещё раз через несколько секунд.")
+            return
+        }
+        if (hasUnavailableItems) {
+            setRequestError(issues[0]?.message || "В корзине есть недоступные товары. Вернитесь в корзину и обновите заказ.")
             return
         }
         if (!validateForm()) return
@@ -302,6 +312,11 @@ const CheckoutContent = () => {
                     />
                 </div>
 
+                {hasUnavailableItems && (
+                    <div className={styles.error_message}>
+                        В корзине есть товары или размеры, которые стали недоступны. Вернитесь в корзину и обновите заказ.
+                    </div>
+                )}
                 {requestError && <div className={styles.error_message}>{requestError}</div>}
             </form>
 
@@ -312,6 +327,8 @@ const CheckoutContent = () => {
                         void submitCheckout()
                     }}
                     disableCheckoutIfEmpty={false}
+                    checkoutDisabled={hasUnavailableItems || isCheckingAvailability}
+                    checkoutDisabledMessage={hasUnavailableItems ? "В корзине есть недоступные товары." : "Проверяем остатки..."}
                     promoCode={promoCode}
                     bonusToSpend={Number(bonusToSpend || 0)}
                     showPromoInput={false}

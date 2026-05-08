@@ -15,9 +15,10 @@ import {calculateDiscountedTotal} from "@/utils/calculateDiscountedTotal"
 
 interface CartProductItemProps {
     item: CartItem
+    availabilityMessage?: string
 }
 
-const CartProductItem: React.FC<CartProductItemProps> = ({item}) => {
+const CartProductItem: React.FC<CartProductItemProps> = ({item, availabilityMessage}) => {
     const dispatch = useDispatch()
     const discountPercent = typeof item.discountPercent === "number" ? item.discountPercent : 0
     const hasDiscount = discountPercent > 0
@@ -46,6 +47,7 @@ const CartProductItem: React.FC<CartProductItemProps> = ({item}) => {
                         {item.sizeTitle && <Tag>{item.sizeTitle}</Tag>}
                         {item.colorTitle && <Tag>{item.colorTitle}</Tag>}
                     </div>
+                    {availabilityMessage && <div className={styles.availability_alert}>{availabilityMessage}</div>}
                 </div>
             </div>
             <div className={styles.summary_block}>

@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useMemo, useState} from "react"
+import React, {useEffect, useMemo, useState} from "react"
 import Select from "@/components/select/Select"
 import Button from "@/components/button/Button"
 import ProductVariantSelect from "@/features/product/ProductVariantSelect"
@@ -40,9 +40,17 @@ const ProductPurchaseControls: React.FC<ProductPurchaseControlsProps> = (
         () => sizeOptions.length ? sizeOptions : [{title: "One size", value: 0}],
         [sizeOptions]
     )
-    const [selectedSize, setSelectedSize] = useState<SelectOption>(resolvedSizeOptions[0])
+    const firstAvailableSize = resolvedSizeOptions.find(option => !option.disabled) ?? resolvedSizeOptions[0]
+    const [selectedSize, setSelectedSize] = useState<SelectOption>(firstAvailableSize)
+    const isSelectedSizeUnavailable = Boolean(selectedSize?.disabled)
+    const isProductUnavailable = resolvedSizeOptions.every(option => option.disabled)
+
+    useEffect(() => {
+        setSelectedSize(firstAvailableSize)
+    }, [firstAvailableSize])
 
     const onAddToCart = () => {
+        if (isSelectedSizeUnavailable || isProductUnavailable) return
         dispatch(addItem({
             productVariantId: productId,
             sizeId: typeof selectedSize.value === "number" ? selectedSize.value : null,
@@ -65,7 +73,9 @@ const ProductPurchaseControls: React.FC<ProductPurchaseControlsProps> = (
             </div>
             {children}
             <div className={styles.actions}>
-                <Button block onClick={onAddToCart}>Добавить в корзину</Button>
+                <Button block disabled={isSelectedSizeUnavailable || isProductUnavailable} onClick={onAddToCart}>
+                    {isProductUnavailable ? "Нет в наличии" : "Добавить в корзину"}
+                </Button>
             </div>
         </>
     )

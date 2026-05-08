@@ -95,3 +95,16 @@
     display: inline-block;
     border-radius: 50%;
 }
+
+.optionDisabled {
+    opacity: 0.55;
+    cursor: not-allowed!important;
+    text-decoration: line-through;
+}
+
+.hint {
+    margin-left: auto;
+    font-size: 12px;
+    color: #8C8C8C;
+    text-transform: none;
+}

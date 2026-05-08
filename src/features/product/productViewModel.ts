@@ -10,6 +10,9 @@ export interface SelectOption {
     color?: string
     title: string
     value: string | number
+    disabled?: boolean
+    hint?: string
+    availableQty?: number
 }
 
 export const mapImages = (images: ProductVariantImage[] | undefined) =>
@@ -20,12 +23,22 @@ export const mapImages = (images: ProductVariantImage[] | undefined) =>
         }))
         : []
 
+export const getAvailableQty = (item: ProductVariantSize) =>
+    Math.max(Number(item.qty || 0) - Number(item.reservedQty || 0), 0)
+
 export const mapSizeOptions = (sizes: ProductVariantSize[] | undefined): SelectOption[] =>
     sizes?.length
-        ? sizes.map(item => ({
-            title: getTextValue(item.size.title),
-            value: item.size.id
-        }))
+        ? sizes.map(item => {
+            const availableQty = getAvailableQty(item)
+
+            return {
+                title: availableQty > 0 ? getTextValue(item.size.title) : `${getTextValue(item.size.title)} — нет в наличии`,
+                value: item.size.id,
+                disabled: availableQty <= 0,
+                hint: availableQty > 0 ? `Доступно: ${availableQty}` : "Нет в наличии",
+                availableQty
+            }
+        })
         : []
 
 export const mapColorOptions = (product: ProductVariant): SelectOption[] =>

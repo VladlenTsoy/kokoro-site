@@ -177,3 +177,10 @@
         width: auto;
     }
 }
+
+.availability_alert {
+    margin-top: 10px;
+    color: #F04438;
+    font-size: 14px;
+    font-weight: 500;
+}
