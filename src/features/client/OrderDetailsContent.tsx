@@ -40,6 +40,11 @@ const getMapPreviewUrl = (lat: number, lng: number) =>
 const getItemTitle = (item: OrderItem) =>
     item.productVariant?.title || item.productTitle || `Вариант #${item.productVariant?.id || item.productVariantId || "-"}`
 
+const isPaymePaymentMethod = (order: Order) => {
+    const marker = `${order.paymentMethod?.code ?? ""} ${order.paymentMethod?.title ?? ""}`.toLowerCase()
+    return marker.includes("payme") || marker.includes("pay me") || marker.includes("пэйм")
+}
+
 interface OrderDetailsContentProps {
     orderId: number
 }
@@ -126,7 +131,7 @@ const OrderDetailsContent: React.FC<OrderDetailsContentProps> = ({orderId}) => {
         )
     }
 
-    const canPay = order.paymentStatus === "pending"
+    const canPay = order.paymentStatus === "pending" && isPaymePaymentMethod(order)
     const canCancel = order.deliveryStatus === "pending"
     const location = order.address?.location
     const lat = typeof location?.lat === "number" ? location.lat : null
@@ -142,6 +147,7 @@ const OrderDetailsContent: React.FC<OrderDetailsContentProps> = ({orderId}) => {
                     </div>
                     <div className={styles.meta_row}>Создан: <span>{formatDate(order.createdAt)}</span></div>
                     <div className={styles.meta_row}>Итог: <span>{formatPrice(order.total)} сум</span></div>
+                    <div className={styles.meta_row}>Метод оплаты: <span>{order.paymentMethod?.title ?? "—"}</span></div>
                     <div className={styles.meta_row}>Оплата: <span>{order.paymentStatus ?? "pending"}</span></div>
                 </div>
                 <div className={styles.status_stack}>
@@ -181,6 +187,7 @@ const OrderDetailsContent: React.FC<OrderDetailsContentProps> = ({orderId}) => {
 
                 <div className={styles.info_card}>
                     <h5>Доставка</h5>
+                    <div className={styles.info_line}>Тип: <span>{order.deliveryType?.title ?? "—"}</span></div>
                     <div className={styles.info_line}>Адрес: <span>{order.address?.address ?? "—"}</span></div>
                     {lat !== null && lng !== null && (
                         <div className={styles.map_wrap}>

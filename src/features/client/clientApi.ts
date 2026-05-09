@@ -47,6 +47,20 @@ export interface OrderItem {
     sizeTitle?: string | null
 }
 
+export interface OrderPaymentMethod {
+    id: number
+    title: string
+    code?: string | null
+    isOnline?: boolean
+}
+
+export interface OrderDeliveryType {
+    id: number
+    title: string
+    type?: string
+    price?: number
+}
+
 export interface Order {
     id: number
     orderNumber?: string
@@ -60,6 +74,8 @@ export interface Order {
     bonusEarned?: number
     paymentStatus?: "pending" | "paid" | "failed" | "refunded"
     deliveryStatus?: "pending" | "preparing" | "ready" | "delivering" | "delivered" | "cancelled"
+    paymentMethod?: OrderPaymentMethod | null
+    deliveryType?: OrderDeliveryType | null
     accessToken?: string | null
     createdAt: string
     updatedAt?: string

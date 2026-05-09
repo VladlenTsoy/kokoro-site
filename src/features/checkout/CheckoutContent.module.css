@@ -30,6 +30,50 @@
     line-height: 1.4;
 }
 
+.option_grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: -4px 0 22px;
+}
+
+.option_card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    min-height: 82px;
+    padding: 14px;
+    border: 1px solid #d8d8d8;
+    background: #fff;
+    color: var(--black-color);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.option_card span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.option_card b {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+.option_card small {
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--secondary-color);
+}
+
+.option_card_active {
+    border-color: var(--black-color);
+    box-shadow: 0 0 0 1px var(--black-color);
+}
+
 .error {
     color: #d92d20;
     font-size: 12px;
@@ -102,7 +146,8 @@
         padding: 22px;
     }
 
-    .form_items {
+    .form_items,
+    .option_grid {
         grid-template-columns: 1fr;
     }
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useMemo, useState} from "react"
 import styles from "./CheckoutContent.module.css"
 import Input from "@/components/input/Input"
 import CartTotalBlock from "@/components/cart-total-block/CartTotalBlock"
@@ -18,6 +18,41 @@ import {
     toUzbekistanE164
 } from "@/utils/phoneFormat"
 import {saveGuestOrderAccess} from "@/features/orders/guestOrdersSlice"
+
+interface PaymentMethodOption {
+    id: number
+    title: string
+    code?: string | null
+    isActive?: boolean
+    isOnline?: boolean
+}
+
+interface DeliveryTypeOption {
+    id: number
+    title: string
+    type?: string
+    price?: number
+    description?: string | null
+}
+
+interface SourceOption {
+    id: number
+    title: string
+    code?: string | null
+    isActive?: boolean
+}
+
+const isPaymePaymentMethod = (method: PaymentMethodOption | null) => {
+    const marker = `${method?.code ?? ""} ${method?.title ?? ""}`.toLowerCase()
+    return marker.includes("payme") || marker.includes("pay me") || marker.includes("пэйм")
+}
+
+const fetchCheckoutOptions = async <TOption,>(path: string): Promise<TOption[]> => {
+    const response = await fetch(`${API_BASE_URL}${path}`)
+    if (!response.ok) throw new Error(`Failed to load ${path}`)
+    const data = await response.json()
+    return Array.isArray(data) ? data : []
+}
 
 const CheckoutContent = () => {
     const router = useRouter()
@@ -42,6 +77,11 @@ const CheckoutContent = () => {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [addressResetToken, setAddressResetToken] = useState(0)
     const [isRedirectingAfterCreate, setIsRedirectingAfterCreate] = useState(false)
+    const [paymentMethods, setPaymentMethods] = useState<PaymentMethodOption[]>([])
+    const [deliveryTypes, setDeliveryTypes] = useState<DeliveryTypeOption[]>([])
+    const [sourceId, setSourceId] = useState<number | null>(null)
+    const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<number | null>(null)
+    const [selectedDeliveryTypeId, setSelectedDeliveryTypeId] = useState<number | null>(null)
 
     useEffect(() => {
         if (!client) return
@@ -58,6 +98,40 @@ const CheckoutContent = () => {
             router.replace("/cart")
         }
     }, [cartItems.length, isSubmitting, isRedirectingAfterCreate, router])
+
+
+    useEffect(() => {
+        let isMounted = true
+
+        Promise.all([
+            fetchCheckoutOptions<PaymentMethodOption>("/payment-method"),
+            fetchCheckoutOptions<DeliveryTypeOption>("/delivery-types"),
+            fetchCheckoutOptions<SourceOption>("/sources")
+        ]).then(([paymentResponse, deliveryResponse, sourceResponse]) => {
+            if (!isMounted) return
+
+            const activePaymentMethods = paymentResponse.filter(method => method.isActive !== false)
+            const activeSources = sourceResponse.filter(source => source.isActive !== false)
+            const siteSource = activeSources.find(source => {
+                const marker = `${source.code ?? ""} ${source.title ?? ""}`.toLowerCase()
+                return marker.includes("site") || marker.includes("web") || marker.includes("сайт")
+            })
+            const defaultPayment = activePaymentMethods.find(isPaymePaymentMethod) ?? activePaymentMethods[0] ?? null
+            const defaultDelivery = deliveryResponse.find(delivery => delivery.type === "courier") ?? deliveryResponse[0] ?? null
+
+            setPaymentMethods(activePaymentMethods)
+            setDeliveryTypes(deliveryResponse)
+            setSourceId(siteSource?.id ?? activeSources[0]?.id ?? null)
+            setSelectedPaymentMethodId(current => current ?? defaultPayment?.id ?? null)
+            setSelectedDeliveryTypeId(current => current ?? defaultDelivery?.id ?? null)
+        }).catch(() => {
+            // Checkout options are optional for backward compatibility with older API deployments.
+        })
+
+        return () => {
+            isMounted = false
+        }
+    }, [])
 
     const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value)
@@ -148,6 +222,10 @@ const CheckoutContent = () => {
                 ...(item.sizeId ? {sizeId: item.sizeId} : {}),
                 qty: item.qty
             })),
+            ...(selectedPaymentMethodId ? {paymentMethodId: selectedPaymentMethodId} : {}),
+            ...(selectedDeliveryTypeId ? {deliveryTypeId: selectedDeliveryTypeId} : {}),
+            ...(sourceId ? {sourceId} : {}),
+            ...(selectedDeliveryType ? {deliveryPrice: selectedDeliveryType.price ?? 0} : {}),
             ...(promoCode.trim() ? {promoCode: promoCode.trim()} : {}),
             ...(bonusToSpend.trim() ? {bonusToSpend: Number(bonusToSpend.replace(/\D/g, ""))} : {}),
             ...(comment.trim() ? {comment: comment.trim()} : {})
@@ -212,6 +290,26 @@ const CheckoutContent = () => {
             setBonusToSpend("")
             setComment("")
             setAddressResetToken(prev => prev + 1)
+
+            if (isSelectedPaymentPayme) {
+                try {
+                    const paymeResponse = await fetch(`${API_BASE_URL}/client/orders/${normalizedOrderId}/payme-link${!accessToken && orderAccessToken ? `?accessToken=${encodeURIComponent(orderAccessToken)}&lang=ru` : "?lang=ru"}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            ...(accessToken ? {Authorization: `Bearer ${accessToken}`} : {})
+                        }
+                    })
+                    const paymeData = await paymeResponse.json().catch(() => null)
+                    if (paymeResponse.ok && typeof paymeData?.paymentUrl === "string") {
+                        window.location.href = paymeData.paymentUrl
+                        return
+                    }
+                } catch {
+                    // If Payme link creation fails, keep the order accessible so the user can retry payment.
+                }
+            }
+
             router.push(`/orders/${normalizedOrderId}?success=1`)
         } catch {
             setRequestError("Сервис временно недоступен. Попробуйте ещё раз.")
@@ -224,6 +322,17 @@ const CheckoutContent = () => {
         e.preventDefault()
         void submitCheckout()
     }
+
+    const selectedPaymentMethod = useMemo(
+        () => paymentMethods.find(method => method.id === selectedPaymentMethodId) ?? null,
+        [paymentMethods, selectedPaymentMethodId]
+    )
+    const selectedDeliveryType = useMemo(
+        () => deliveryTypes.find(type => type.id === selectedDeliveryTypeId) ?? null,
+        [deliveryTypes, selectedDeliveryTypeId]
+    )
+    const selectedDeliveryPrice = selectedDeliveryType?.price ?? 0
+    const isSelectedPaymentPayme = isPaymePaymentMethod(selectedPaymentMethod)
 
     const phoneValue = isPhoneFocused || phoneLocal.length > 0
         ? formatUzbekistanPhone(phoneLocal)
@@ -281,7 +390,39 @@ const CheckoutContent = () => {
                     }}
                 />
 
+                {deliveryTypes.length > 0 && (
+                    <div className={styles.option_grid}>
+                        {deliveryTypes.map(type => (
+                            <button
+                                type="button"
+                                key={type.id}
+                                className={`${styles.option_card} ${selectedDeliveryTypeId === type.id ? styles.option_card_active : ""}`}
+                                onClick={() => setSelectedDeliveryTypeId(type.id)}
+                            >
+                                <span>{type.title}</span>
+                                <b>{type.price && type.price > 0 ? `${type.price.toLocaleString("ru-RU")} сум` : "Бесплатно"}</b>
+                                {type.description && <small>{type.description}</small>}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
                 <h4 className={styles.form_title}>Оплата</h4>
+                {paymentMethods.length > 0 && (
+                    <div className={styles.option_grid}>
+                        {paymentMethods.map(method => (
+                            <button
+                                type="button"
+                                key={method.id}
+                                className={`${styles.option_card} ${selectedPaymentMethodId === method.id ? styles.option_card_active : ""}`}
+                                onClick={() => setSelectedPaymentMethodId(method.id)}
+                            >
+                                <span>{method.title}</span>
+                                <b>{isPaymePaymentMethod(method) ? "Онлайн через Payme" : (method.isOnline ? "Онлайн" : "При получении")}</b>
+                            </button>
+                        ))}
+                    </div>
+                )}
                 <div className={styles.form_items}>
                     <div className={styles.form_item}>
                         <Input
@@ -322,7 +463,7 @@ const CheckoutContent = () => {
 
             <div className={styles.sticky_sidebar}>
                 <CartTotalBlock
-                    checkoutButtonText={isSubmitting ? "Оформляем..." : "Оформить заказ"}
+                    checkoutButtonText={isSubmitting ? "Оформляем..." : (isSelectedPaymentPayme ? "Оформить и оплатить" : "Оформить заказ")}
                     onCheckoutClick={() => {
                         void submitCheckout()
                     }}
@@ -331,6 +472,7 @@ const CheckoutContent = () => {
                     checkoutDisabledMessage={hasUnavailableItems ? "В корзине есть недоступные товары." : "Проверяем остатки..."}
                     promoCode={promoCode}
                     bonusToSpend={Number(bonusToSpend || 0)}
+                    deliveryPrice={selectedDeliveryPrice}
                     showPromoInput={false}
                 />
             </div>
