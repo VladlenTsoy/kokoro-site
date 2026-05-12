@@ -96,7 +96,7 @@ const Page = () => {
                             <div className={styles.slider}>
                                 <Image
                                     src="/images/cards/tanjiro.png"
-                                    alt="kokoro nezuko card"
+                                    alt="kokoro tanjiro card"
                                     width={0}
                                     height={0}
                                     sizes="100vw"
@@ -108,7 +108,7 @@ const Page = () => {
                             <div className={styles.slider}>
                                 <Image
                                     src="/images/cards/zenitsu.png"
-                                    alt="kokoro tanjiro card"
+                                    alt="kokoro zenitsu card"
                                     width={0}
                                     height={0}
                                     sizes="100vw"
